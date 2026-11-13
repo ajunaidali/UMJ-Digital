@@ -48,18 +48,33 @@ function LiveSiteFrame() {
     const desktop = window.matchMedia('(min-width: 768px)').matches;
     if (slowConnection || !desktop) return;
 
+    let idleId: number | undefined;
+    let timeoutId: number | undefined;
+    const enable = () => setLoadFrame(true);
+    const schedule = () => {
+      if (window.requestIdleCallback) idleId = window.requestIdleCallback(enable, { timeout: 1200 });
+      else timeoutId = window.setTimeout(enable, 350);
+    };
+
     if (!('IntersectionObserver' in window)) {
-      setLoadFrame(true);
-      return;
+      schedule();
+      return () => {
+        if (idleId !== undefined) window.cancelIdleCallback(idleId);
+        if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+      };
     }
 
     const observer = new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return;
-      setLoadFrame(true);
       observer.disconnect();
-    });
+      schedule();
+    }, { rootMargin: '160px 0px' });
     observer.observe(element);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (idleId !== undefined) window.cancelIdleCallback(idleId);
+      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {
@@ -85,6 +100,7 @@ function LiveSiteFrame() {
           loading="lazy"
           referrerPolicy="strict-origin-when-cross-origin"
           className="portfolio-live-frame"
+          tabIndex={engaged ? 0 : -1}
           style={{ pointerEvents: engaged ? 'auto' : 'none' }}
         />
       ) : (
@@ -201,7 +217,7 @@ export default function PortfolioPage() {
       </AnimatePresence>
 
       <motion.div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2">
-        <AnimatePresence initial={false} mode="popLayout">
+        <AnimatePresence initial={false}>
           {galleryProjects.map((project, index) => (
             <motion.article
               key={project.title}

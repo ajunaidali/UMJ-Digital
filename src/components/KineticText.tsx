@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { Fragment, useLayoutEffect, useRef } from 'react';
 
 type KineticTextProps = {
   text: string;
@@ -8,48 +8,62 @@ type KineticTextProps = {
 
 export default function KineticText({ text, className = '', mode = 'words' }: KineticTextProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [shown, setShown] = useState(false);
+  const finished = useRef(0);
   const words = text.split(' ');
   const step = mode === 'characters' ? 0.012 : 0;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
+    finished.current = 0;
+    element.classList.remove('kinetic-on', 'kinetic-settled');
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const show = () => element.classList.add('kinetic-on');
+
     if (reduced || !('IntersectionObserver' in window)) {
-      setShown(true);
+      show();
       return;
     }
 
     const rect = element.getBoundingClientRect();
     const viewHeight = window.innerHeight || document.documentElement.clientHeight;
     if (rect.top <= viewHeight * 0.85 && rect.bottom >= 0) {
-      setShown(true);
+      show();
       return;
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
-        setShown(true);
+        show();
         observer.disconnect();
       },
-      { threshold: 0.45 },
+      { threshold: 0.35 },
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, []);
+  }, [text]);
 
   return (
-    <span ref={ref} aria-label={text} className={`${className}${shown ? ' kinetic-on' : ''}`}>
+    <span ref={ref} className={className}>
+      <span className="sr-only">{text}</span>
+      <span
+        aria-hidden="true"
+        onAnimationEnd={(event) => {
+          if (event.animationName !== 'kinetic-rise') return;
+          finished.current += 1;
+          const total = event.currentTarget.querySelectorAll('.kinetic-piece').length;
+          if (finished.current >= total) event.currentTarget.parentElement?.classList.add('kinetic-settled');
+        }}
+      >
       {words.map((word, wordIndex) => (
         <Fragment key={`${word}-${wordIndex}`}>
           <span className="kinetic-word">
             {(mode === 'characters' ? [...word] : [word]).map((part, partIndex) => {
               const delay = Math.min(wordIndex * 0.04 + partIndex * step, 0.36);
               return (
-                <span key={`${part}-${partIndex}`} className="kinetic-mask" aria-hidden="true">
+                <span key={`${part}-${partIndex}`} className="kinetic-mask">
                   <span className="kinetic-piece" style={delay > 0 ? { animationDelay: `${delay}s` } : undefined}>
                     {part}
                   </span>
@@ -60,6 +74,7 @@ export default function KineticText({ text, className = '', mode = 'words' }: Ki
           {wordIndex < words.length - 1 ? ' ' : null}
         </Fragment>
       ))}
+      </span>
     </span>
   );
 }

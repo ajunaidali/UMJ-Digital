@@ -1,4 +1,3 @@
-import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowRight, MoveUpRight } from 'lucide-react';
 import KineticText from '../components/KineticText';
 import MagneticLink from '../components/MagneticLink';
@@ -8,8 +7,6 @@ import SectionTitle from '../components/SectionTitle';
 import { serviceHighlights, services } from '../data/siteData';
 
 export default function ServicesPage() {
-  const reduceMotion = useReducedMotion();
-
   return (
     <div className="services-page mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6 lg:px-8">
       <section className="service-page-intro grid items-end gap-8 pb-12 md:grid-cols-[1.15fr_0.85fr]">
@@ -57,12 +54,8 @@ export default function ServicesPage() {
 
         <div className="space-y-5">
           {services.map(({ title, summary, list, image, icon: Icon }, index) => (
-            <motion.article
-              key={title}
-              initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.14 }}
-              transition={{ duration: reduceMotion ? 0 : 0.68, delay: reduceMotion ? 0 : index * 0.04, ease: [0.22, 1, 0.36, 1] }}
+            <ScrollReveal key={title} delay={Math.min(index, 4) * 0.04}>
+            <article
               className="service-panel grid gap-8 border border-white/10 bg-[#071126]/80 p-5 md:p-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10"
             >
               <div className="flex flex-col justify-center">
@@ -96,7 +89,8 @@ export default function ServicesPage() {
                 <div className="service-art-shade" aria-hidden="true" />
                 <div className="pointer-events-none absolute bottom-4 right-5 z-10 text-[9px] uppercase tracking-[0.24em] text-white/85">UMJ DIGITAL / 0{index + 1}</div>
               </div>
-            </motion.article>
+            </article>
+            </ScrollReveal>
           ))}
         </div>
       </section>

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useLayoutEffect } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import AmbientCursor from './components/AmbientCursor';
@@ -29,6 +29,10 @@ function NotFoundPage() {
 function PageMotion({ children }: { children: ReactNode }) {
   const reduceMotion = useReducedMotion();
 
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <motion.div
       initial={reduceMotion ? false : { opacity: 0 }}
@@ -43,14 +47,6 @@ function PageMotion({ children }: { children: ReactNode }) {
 
 export default function App() {
   const location = useLocation();
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const previous = root.style.scrollBehavior;
-    root.style.scrollBehavior = 'auto';
-    window.scrollTo(0, 0);
-    root.style.scrollBehavior = previous;
-  }, [location.pathname]);
 
   useEffect(() => {
     const connection = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;

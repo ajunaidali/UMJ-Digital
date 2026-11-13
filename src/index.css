@@ -9,7 +9,7 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
   overflow-x: clip;
 }
 
@@ -24,6 +24,7 @@ main {
 
 body {
   margin: 0;
+  overflow-x: clip;
   min-height: 100vh;
   background:
     radial-gradient(circle at top, rgba(69, 234, 244, 0.18), transparent 30%),
@@ -111,7 +112,9 @@ select {
 }
 
 .hero-side {
+  position: relative;
   width: min(520px, 38vw);
+  max-width: 100%;
   margin-inline-start: auto;
   pointer-events: none;
   animation: hero-side-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -195,8 +198,8 @@ select {
 }
 
 .hero-side-tile-a {
-  top: -4%;
-  left: -2%;
+  top: -2%;
+  left: 0;
   width: 52px;
   height: 52px;
   border-radius: 14px;
@@ -204,7 +207,7 @@ select {
 
 .hero-side-tile-b {
   top: 18%;
-  right: -3%;
+  right: 0;
   width: 28px;
   height: 28px;
   border-radius: 8px;
@@ -309,7 +312,8 @@ select {
   filter: drop-shadow(0 12px 30px rgba(0, 0, 0, .28));
 }
 
-.hero-lottie svg {
+.hero-lottie svg,
+.hero-lottie canvas {
   display: block;
   width: 100%;
   height: 100%;
@@ -420,8 +424,12 @@ select {
 
 .kinetic-mask {
   display: inline-block;
-  overflow: hidden;
+  overflow: visible;
   vertical-align: bottom;
+}
+
+.kinetic-on:not(.kinetic-settled) .kinetic-mask {
+  overflow: hidden;
 }
 
 .kinetic-piece {
@@ -445,18 +453,25 @@ select {
 
 .scroll-reveal {
   --reveal-x: 0px;
-  --reveal-y: 32px;
+  --reveal-y: 20px;
+  min-width: 0;
   opacity: 0;
   translate: var(--reveal-x) var(--reveal-y);
 }
 
+.scroll-reveal.is-settled {
+  animation: none;
+  opacity: 1;
+  translate: none;
+}
+
 .scroll-reveal-left {
-  --reveal-x: -32px;
+  --reveal-x: -12px;
   --reveal-y: 0px;
 }
 
 .scroll-reveal-right {
-  --reveal-x: 32px;
+  --reveal-x: 12px;
   --reveal-y: 0px;
 }
 
@@ -534,12 +549,11 @@ select {
 
 .story-art {
   box-shadow: 0 24px 100px rgba(0,0,0,.24);
-  will-change: transform;
 }
 
 .story-art-collage {
   position: absolute;
-  inset: 0;
+  inset: 0 0 22%;
   z-index: 1;
   pointer-events: none;
 }
@@ -657,8 +671,15 @@ select {
   transition: translate .24s cubic-bezier(.22,1,.36,1), color .2s ease, background .2s ease;
 }
 
-.magnetic-link:hover {
-  translate: 0 -2px;
+@media (hover: hover) and (pointer: fine) {
+  .magnetic-link:hover {
+    translate: 0 -2px;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid rgba(69, 234, 244, 0.9);
+  outline-offset: 3px;
 }
 
 .ambient-cursor.is-on {
@@ -785,6 +806,13 @@ select {
   color: #536274;
   font-size: 8px;
   letter-spacing: .07em;
+}
+
+.portfolio-browser-bar span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .portfolio-browser-dots {
@@ -927,5 +955,9 @@ select {
     translate: none !important;
     transform: none !important;
     animation: none !important;
+  }
+
+  .kinetic-mask {
+    overflow: visible !important;
   }
 }

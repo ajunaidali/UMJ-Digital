@@ -5,16 +5,20 @@ import { assets } from '../config/assets';
 type HeroAnimationProps = {
   active: boolean;
   motionAllowed: boolean;
+  fit?: 'slice' | 'meet';
+  onError?: () => void;
 };
 
-export default function HeroAnimation({ active, motionAllowed }: HeroAnimationProps) {
+export default function HeroAnimation({ active, motionAllowed, fit = 'slice', onError }: HeroAnimationProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<AnimationItem | null>(null);
   const activeRef = useRef(active);
   const motionAllowedRef = useRef(motionAllowed);
+  const onErrorRef = useRef(onError);
 
   activeRef.current = active;
   motionAllowedRef.current = motionAllowed;
+  onErrorRef.current = onError;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -22,13 +26,14 @@ export default function HeroAnimation({ active, motionAllowed }: HeroAnimationPr
 
     let cancelled = false;
     let animation: AnimationItem | null = null;
+    let resizeObserver: ResizeObserver | null = null;
 
     const handleLoaded = () => {
       if (!motionAllowedRef.current) animation?.goToAndStop(0, true);
       else if (activeRef.current) animation?.play();
     };
     const handleFailure = () => {
-      console.error(`Unable to render the hero animation: ${assets.animations.heroLottieJson}`);
+      if (!cancelled) onErrorRef.current?.();
     };
 
     void import('lottie-web').then(({ default: lottie }) => {
@@ -36,31 +41,45 @@ export default function HeroAnimation({ active, motionAllowed }: HeroAnimationPr
 
       animation = lottie.loadAnimation({
         container,
-        renderer: 'svg',
+        renderer: 'canvas',
         loop: true,
         autoplay: false,
         path: assets.animations.heroLottieJson,
         rendererSettings: {
-          preserveAspectRatio: 'xMidYMid slice',
+          preserveAspectRatio: fit === 'slice' ? 'xMidYMid slice' : 'xMidYMid meet',
           progressiveLoad: true,
+          clearCanvas: true,
+          dpr: Math.min(window.devicePixelRatio || 1, 1.5),
         },
       });
       animation.setSubframe(false);
       animationRef.current = animation;
       animation.addEventListener('DOMLoaded', handleLoaded);
       animation.addEventListener('data_failed', handleFailure);
-    }).catch((error: unknown) => {
-      if (!cancelled) console.error('Unable to initialize the hero animation.', error);
+      if ('ResizeObserver' in window) {
+        resizeObserver = new ResizeObserver(() => {
+          if (!animation?.isLoaded) return;
+          try {
+            animation.resize();
+          } catch {
+            /* Canvas renderer is not ready yet. */
+          }
+        });
+        resizeObserver.observe(container);
+      }
+    }).catch(() => {
+      if (!cancelled) onErrorRef.current?.();
     });
 
     return () => {
       cancelled = true;
+      resizeObserver?.disconnect();
       animation?.removeEventListener('DOMLoaded', handleLoaded);
       animation?.removeEventListener('data_failed', handleFailure);
       animation?.destroy();
       if (animationRef.current === animation) animationRef.current = null;
     };
-  }, []);
+  }, [fit]);
 
   useEffect(() => {
     const animation = animationRef.current;

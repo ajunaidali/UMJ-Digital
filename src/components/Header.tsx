@@ -50,11 +50,11 @@ export default function Header() {
   return (
     <header className="site-header sticky top-0 z-50 border-b border-white/10 bg-[#05082F]/85 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-3" aria-label="UMJ Digital home">
-          <img src={assets.branding.logoPrimarySvg} alt="UMJ Digital" className="h-10 w-auto" width="707" height="357" />
+        <Link to="/" className="flex shrink-0 items-center gap-3" aria-label="UMJ Digital home">
+          <img src={assets.branding.logoPrimarySvg} alt="" className="h-10 w-auto" width="707" height="357" />
         </Link>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-white/10 bg-white/[0.035] p-1 md:flex">
+        <nav className="hidden min-w-0 items-center gap-1 rounded-full border border-white/10 bg-white/[0.035] p-1 md:flex">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -76,7 +76,7 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden shrink-0 md:block">
           <Link
             to="/contact"
             onPointerEnter={() => prefetchPage('/contact')}

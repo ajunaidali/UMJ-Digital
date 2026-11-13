@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-[#04081d]">
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 md:grid-cols-[1.3fr_0.7fr_0.7fr_1fr]">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.7fr_0.7fr_1fr]">
           <div>
             <img src={assets.branding.logoPrimarySvg} alt="UMJ Digital" className="h-12 w-auto" width="707" height="357" />
             <p className="mt-6 max-w-md text-sm leading-7 text-slate-300">
@@ -37,7 +37,7 @@ export default function Footer() {
             <h3 className="text-sm font-semibold uppercase tracking-[0.28em] text-slate-200">Connect</h3>
             <div className="mt-6 flex flex-col items-start gap-4">
               {contactDeliveryConfig.email && (
-                <a href={`mailto:${contactDeliveryConfig.email}`} className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-cyan-200">
+                <a href={`mailto:${contactDeliveryConfig.email}`} className="inline-flex min-w-0 items-center gap-2 break-all text-sm text-slate-300 transition hover:text-cyan-200">
                   <Mail size={16} /> {contactDeliveryConfig.email}
                 </a>
               )}

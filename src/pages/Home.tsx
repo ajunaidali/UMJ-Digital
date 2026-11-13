@@ -72,7 +72,7 @@ export default function HomePage() {
         <div className="hero-ambient hero-ambient-one" aria-hidden="true" />
         <div className="hero-ambient hero-ambient-two" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-8">
+          <div className="grid items-center lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-14 xl:gap-x-16">
             <div className="relative z-10 min-w-0 pb-8 lg:max-w-3xl">
               <ScrollReveal direction="left">
                 <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-2 text-[10px] font-medium uppercase tracking-[0.3em] text-cyan-100">
@@ -103,7 +103,7 @@ export default function HomePage() {
             </div>
             <HeroSideArt />
           </div>
-          <div className="mt-10 flex items-center justify-between border-t border-white/10 py-5 text-[10px] uppercase tracking-[0.3em] text-slate-400">
+          <div className="mt-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/10 py-5 text-[10px] uppercase tracking-[0.16em] text-slate-400 sm:tracking-[0.3em]">
             <span>Strategy / Design / Development</span>
             <span className="hidden items-center gap-2 sm:inline-flex"><ArrowDownRight size={14} className="text-cyan-300" /> Scroll to explore</span>
             <span>01 — {String(services.length).padStart(2, '0')}</span>

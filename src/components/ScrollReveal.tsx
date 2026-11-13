@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 
 type ScrollRevealProps = {
@@ -15,29 +15,30 @@ export default function ScrollReveal({
   direction = 'up',
 }: ScrollRevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [shown, setShown] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = ref.current;
     if (!element) return;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reveal = () => element.classList.add('is-shown');
+
     if (reduced || !('IntersectionObserver' in window)) {
-      setShown(true);
+      reveal();
       return;
     }
 
     const rect = element.getBoundingClientRect();
     const viewHeight = window.innerHeight || document.documentElement.clientHeight;
     if (rect.top <= viewHeight * 0.92 && rect.bottom >= 0) {
-      setShown(true);
+      reveal();
       return;
     }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
-        setShown(true);
+        reveal();
         observer.disconnect();
       },
       { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
@@ -49,8 +50,12 @@ export default function ScrollReveal({
   return (
     <div
       ref={ref}
-      className={`scroll-reveal scroll-reveal-${direction}${shown ? ' is-shown' : ''}${className ? ` ${className}` : ''}`}
+      className={`scroll-reveal scroll-reveal-${direction}${className ? ` ${className}` : ''}`}
       style={delay > 0 ? { animationDelay: `${delay}s` } : undefined}
+      onAnimationEnd={(event) => {
+        if (event.animationName !== 'scroll-reveal-in' || event.target !== event.currentTarget) return;
+        event.currentTarget.classList.add('is-settled');
+      }}
     >
       {children}
     </div>
