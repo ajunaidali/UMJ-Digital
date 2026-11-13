@@ -58,7 +58,7 @@ export default function VideoPreview({ poster, className = '', label }: VideoPre
 
   return (
     <div ref={containerRef} className={`video-preview ${className}`} role="img" aria-label={label}>
-      <img src={poster} alt="" className="video-preview-poster" loading="lazy" />
+      <img src={poster} alt="" className="video-preview-poster" loading="lazy" decoding="async" />
       {isNearViewport && !reduceMotion && !videoFailed && (
         <video
           ref={videoRef}

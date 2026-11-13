@@ -120,8 +120,8 @@ export default function ContactPage() {
             <div className="mt-4 space-y-1">
               {Object.entries(contactDeliveryConfig.envKeys).map(([key, value]) => (
                 <div key={key} className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-slate-950/30 px-3 py-2">
-                  <span className="text-xs uppercase tracking-[0.18em] text-slate-300">{key}</span>
-                  <span className="text-xs text-cyan-200">{value}</span>
+                  <span className="min-w-0 break-all text-xs uppercase tracking-[0.18em] text-slate-300">{key}</span>
+                  <span className="shrink-0 text-xs text-cyan-200">{value}</span>
                 </div>
               ))}
             </div>
@@ -164,7 +164,7 @@ export default function ContactPage() {
           </div>
 
           {message && (
-            <div className={`mt-5 flex items-center gap-3 rounded-xl border px-4 py-3 text-sm ${status === 'success' ? 'border-emerald-400/35 bg-emerald-400/10 text-emerald-200' : 'border-rose-400/35 bg-rose-400/10 text-rose-200'}`}>
+            <div role="status" aria-live="polite" className={`mt-5 flex items-center gap-3 rounded-xl border px-4 py-3 text-sm ${status === 'success' ? 'border-emerald-400/35 bg-emerald-400/10 text-emerald-200' : 'border-rose-400/35 bg-rose-400/10 text-rose-200'}`}>
               {status === 'success' ? <Check size={16} /> : <span className="text-base">!</span>}
               <span>{message}</span>
             </div>

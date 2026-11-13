@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import KineticText from '../components/KineticText';
 import ScrollReveal from '../components/ScrollReveal';
-import SectionTitle from '../components/SectionTitle';
 import { faqs } from '../data/siteData';
 
 export default function FaqsPage() {

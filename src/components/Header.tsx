@@ -5,6 +5,17 @@ import { Link, NavLink, useLocation } from 'react-router-dom';
 import { assets } from '../config/assets';
 import { navItems } from '../data/siteData';
 
+const pageLoaders: Record<string, () => Promise<unknown>> = {
+  '/services': () => import('../pages/Services'),
+  '/faqs': () => import('../pages/Faqs'),
+  '/portfolio': () => import('../pages/Portfolio'),
+  '/contact': () => import('../pages/Contact'),
+};
+
+function prefetchPage(to: string) {
+  void pageLoaders[to]?.();
+}
+
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { pathname } = useLocation();
@@ -17,6 +28,15 @@ export default function Header() {
     document.body.classList.toggle('nav-open', mobileOpen);
     return () => document.body.classList.remove('nav-open');
   }, [mobileOpen]);
+
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 768px)');
+    const closeOnDesktop = () => {
+      if (desktop.matches) setMobileOpen(false);
+    };
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => desktop.removeEventListener('change', closeOnDesktop);
+  }, []);
 
   useEffect(() => {
     if (!mobileOpen) return;
@@ -40,7 +60,11 @@ export default function Header() {
               key={item.to}
               to={item.to}
               end={item.to === '/'}
-              className="nav-link relative rounded-full px-4 py-2 text-sm font-medium text-slate-300 transition hover:text-white"
+              onPointerEnter={() => prefetchPage(item.to)}
+              onFocus={() => prefetchPage(item.to)}
+              className={({ isActive }) =>
+                `nav-link relative rounded-full px-4 py-2 text-sm font-medium transition ${isActive ? 'text-white' : 'text-slate-300 hover:text-white'}`
+              }
             >
               {({ isActive }) => (
                 <>
@@ -55,6 +79,8 @@ export default function Header() {
         <div className="hidden md:block">
           <Link
             to="/contact"
+            onPointerEnter={() => prefetchPage('/contact')}
+            onFocus={() => prefetchPage('/contact')}
             className="inline-flex items-center justify-center rounded-full border border-cyan-400/70 bg-cyan-400/10 px-5 py-2.5 text-sm font-medium text-cyan-200 transition hover:bg-cyan-400 hover:text-slate-900"
           >
             Book a Call
@@ -81,7 +107,7 @@ export default function Header() {
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             id="mobile-nav"
-            className="overflow-hidden border-t border-white/10 bg-[#05082F] md:hidden"
+            className="max-h-[calc(100dvh-4.5rem)] overflow-x-hidden overflow-y-auto border-t border-white/10 bg-[#05082F] md:hidden"
           >
             <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4">
               {navItems.map((item, index) => (
@@ -89,6 +115,8 @@ export default function Header() {
                   <NavLink
                     to={item.to}
                     end={item.to === '/'}
+                    onPointerEnter={() => prefetchPage(item.to)}
+                    onFocus={() => prefetchPage(item.to)}
                     onClick={() => setMobileOpen(false)}
                     className={({ isActive }) =>
                       `block rounded-xl px-4 py-3 text-sm font-medium ${isActive ? 'bg-cyan-300 text-slate-950' : 'text-slate-200 hover:bg-white/5'}`

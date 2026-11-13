@@ -12,6 +12,28 @@ import { featuredProjects } from '../data/siteData';
 
 const filters = ['All', 'Real Project', 'Concept Work', 'Sample Work'];
 
+function ProjectMedia({ project }: { project: (typeof featuredProjects)[number] }) {
+  if (project.category === 'Content Production') {
+    return (
+      <VideoPreview
+        poster={project.image}
+        label={`${project.title} animated sample preview`}
+        className="aspect-[1.48/1] w-full transition duration-700 group-hover:scale-[1.04]"
+      />
+    );
+  }
+
+  return (
+    <img
+      src={project.image}
+      alt={project.title}
+      className={`aspect-[1.48/1] w-full transition duration-700 group-hover:scale-[1.04] ${project.title === 'Mobile Application Design' ? 'bg-[#08152d] object-contain p-6' : 'object-cover'}`}
+      loading="lazy"
+      decoding="async"
+    />
+  );
+}
+
 function LiveSiteFrame() {
   const frameRef = useRef<HTMLDivElement>(null);
   const [loadFrame, setLoadFrame] = useState(false);
@@ -20,6 +42,12 @@ function LiveSiteFrame() {
   useEffect(() => {
     const element = frameRef.current;
     if (!element) return;
+
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const slowConnection = connection?.saveData || connection?.effectiveType === '2g' || connection?.effectiveType === 'slow-2g';
+    const desktop = window.matchMedia('(min-width: 768px)').matches;
+    if (slowConnection || !desktop) return;
+
     if (!('IntersectionObserver' in window)) {
       setLoadFrame(true);
       return;
@@ -29,7 +57,7 @@ function LiveSiteFrame() {
       if (!entry.isIntersecting) return;
       setLoadFrame(true);
       observer.disconnect();
-    }, { rootMargin: '200px 0px' });
+    });
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
@@ -60,16 +88,14 @@ function LiveSiteFrame() {
           style={{ pointerEvents: engaged ? 'auto' : 'none' }}
         />
       ) : (
-        <div className="portfolio-live-frame" />
+        <img src={assets.portfolio.ahmedEngineering} alt="" className="portfolio-live-frame object-cover" decoding="async" />
       )}
-      {!engaged && (
-        <div
-          className="absolute inset-0 z-[2]"
-          aria-hidden="true"
-          onPointerUp={(event) => {
-            if (event.pointerType !== 'mouse') return;
-            setEngaged(true);
-          }}
+      {loadFrame && !engaged && (
+        <button
+          type="button"
+          className="absolute inset-x-0 bottom-0 top-[29px] z-[2] cursor-pointer bg-transparent"
+          aria-label="Interact with the live website preview"
+          onClick={() => setEngaged(true)}
         />
       )}
     </div>
@@ -165,7 +191,7 @@ export default function PortfolioPage() {
                 <LiveSiteFrame />
                 <div className="portfolio-mobile" aria-label="Ahmed Engineering Company mobile preview">
                   <div className="portfolio-mobile-speaker" />
-                  <img src={assets.portfolio.ahmedEngineering} alt="Ahmed Engineering Company responsive project visual" loading="lazy" />
+                  <img src={assets.portfolio.ahmedEngineering} alt="Ahmed Engineering Company responsive project visual" loading="lazy" decoding="async" />
                   <span className="portfolio-mobile-label">MOBILE / 02</span>
                 </div>
               </div>
@@ -175,7 +201,7 @@ export default function PortfolioPage() {
       </AnimatePresence>
 
       <motion.div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2">
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} mode="popLayout">
           {galleryProjects.map((project, index) => (
             <motion.article
               key={project.title}
@@ -185,25 +211,24 @@ export default function PortfolioPage() {
               transition={{ duration: reduceMotion ? 0 : 0.45, delay: reduceMotion ? 0 : Math.min(index, 4) * 0.045, ease: [0.22, 1, 0.36, 1] }}
               className="portfolio-project group"
             >
-              <motion.a
-                href={project.link !== '#' ? project.link : undefined}
-                target={project.link !== '#' ? '_blank' : undefined}
-                rel={project.link !== '#' ? 'noreferrer' : undefined}
-                aria-label={project.link !== '#' ? `Open ${project.title}` : undefined}
-                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: reduceMotion ? 0 : 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className={`portfolio-project-image relative block overflow-hidden border border-white/10 bg-[#09152b] ${project.link === '#' ? 'cursor-default' : ''}`}
-              >
-                {project.category === 'Content Production' ? (
-                  <VideoPreview poster={project.image} label={`${project.title} animated sample preview`} className="aspect-[1.48/1] w-full transition duration-700 group-hover:scale-[1.04]" />
-                ) : (
-                  <img src={project.image} alt={project.title} className={`aspect-[1.48/1] w-full transition duration-700 group-hover:scale-[1.04] ${project.title === 'Mobile Application Design' ? 'bg-[#08152d] object-contain p-6' : 'object-cover'}`} loading="lazy" />
-                )}
-                <span className="portfolio-project-index">0{index + 1} / {String(galleryProjects.length).padStart(2, '0')}</span>
-                <span className="portfolio-project-arrow"><MoveUpRight size={17} /></span>
-              </motion.a>
+              {project.link !== '#' ? (
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`Open ${project.title}`}
+                  className="portfolio-project-image relative block overflow-hidden border border-white/10 bg-[#09152b]"
+                >
+                  <ProjectMedia project={project} />
+                  <span className="portfolio-project-index">0{index + 1} / {String(galleryProjects.length).padStart(2, '0')}</span>
+                  <span className="portfolio-project-arrow"><MoveUpRight size={17} /></span>
+                </a>
+              ) : (
+                <div className="portfolio-project-image relative block cursor-default overflow-hidden border border-white/10 bg-[#09152b]">
+                  <ProjectMedia project={project} />
+                  <span className="portfolio-project-index">0{index + 1} / {String(galleryProjects.length).padStart(2, '0')}</span>
+                </div>
+              )}
               <div className="mt-4 flex items-start justify-between gap-4">
                 <div>
                   <p className="text-[10px] uppercase tracking-[0.22em] text-cyan-200">{project.tag} / {project.category}</p>

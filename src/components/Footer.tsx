@@ -35,14 +35,16 @@ export default function Footer() {
 
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-[0.28em] text-slate-200">Connect</h3>
-            {contactDeliveryConfig.email && (
-              <a href={`mailto:${contactDeliveryConfig.email}`} className="mt-6 inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-cyan-200">
-                <Mail size={16} /> {contactDeliveryConfig.email}
-              </a>
-            )}
-            <Link to="/contact" className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-cyan-300 hover:text-cyan-200">
-              Start Your Project <ArrowUpRight size={16} />
-            </Link>
+            <div className="mt-6 flex flex-col items-start gap-4">
+              {contactDeliveryConfig.email && (
+                <a href={`mailto:${contactDeliveryConfig.email}`} className="inline-flex items-center gap-2 text-sm text-slate-300 transition hover:text-cyan-200">
+                  <Mail size={16} /> {contactDeliveryConfig.email}
+                </a>
+              )}
+              <Link to="/contact" className="inline-flex items-center gap-2 text-sm font-medium text-cyan-300 hover:text-cyan-200">
+                Start Your Project <ArrowUpRight size={16} />
+              </Link>
+            </div>
           </div>
         </div>
 

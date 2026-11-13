@@ -2,11 +2,11 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { ArrowDownRight, ArrowRight, BadgeCheck, ChevronRight, MoveUpRight, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import HeroSideArt from '../components/HeroSideArt';
 import KineticText from '../components/KineticText';
 import MagneticLink from '../components/MagneticLink';
 import Marquee from '../components/Marquee';
 import ScrollReveal from '../components/ScrollReveal';
-import SectionTitle from '../components/SectionTitle';
 import { assets } from '../config/assets';
 import { featuredProjects, founders, processSteps, services, trustStats, whyChooseUs } from '../data/siteData';
 
@@ -45,17 +45,17 @@ function StorySection() {
             src={assets.hero.object2}
             alt="Abstract visual representing digital ideas taking shape"
             className="h-[420px] w-full object-cover md:h-[600px]"
-            loading="lazy"
+            loading="lazy" decoding="async"
             width="1300"
             height="708"
           />
           <div className="story-art-collage" aria-hidden="true">
-            <img src={assets.hero.object1} alt="" width="1296" height="705" loading="lazy" />
-            <img src={assets.animations.featureMotion} alt="" width="1200" height="700" loading="lazy" />
-            <img src={assets.hero.object3} alt="" width="1392" height="720" loading="lazy" />
+            <img src={assets.hero.object1} alt="" width="1296" height="705" loading="lazy" decoding="async" />
+            <img src={assets.animations.featureMotion} alt="" width="1200" height="700" loading="lazy" decoding="async" />
+            <img src={assets.hero.object3} alt="" width="1392" height="720" loading="lazy" decoding="async" />
           </div>
           <div className="story-art-overlay" />
-          <div className="absolute inset-x-6 bottom-6 z-10 flex items-end justify-between gap-6 md:inset-x-10 md:bottom-10">
+          <div className="absolute inset-x-6 bottom-6 z-10 flex flex-col items-start gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-6 md:inset-x-10 md:bottom-10">
             <p className="max-w-sm text-2xl font-medium leading-tight tracking-tight text-white md:text-4xl">Different disciplines.<br />One connected vision.</p>
             <span className="shrink-0 text-xs uppercase tracking-[0.26em] text-cyan-200">UMJ / DIGITAL</span>
           </div>
@@ -72,8 +72,8 @@ export default function HomePage() {
         <div className="hero-ambient hero-ambient-one" aria-hidden="true" />
         <div className="hero-ambient hero-ambient-two" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center">
-            <div className="relative z-10 min-w-0 pb-8">
+          <div className="grid items-center lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-8">
+            <div className="relative z-10 min-w-0 pb-8 lg:max-w-3xl">
               <ScrollReveal direction="left">
                 <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-2 text-[10px] font-medium uppercase tracking-[0.3em] text-cyan-100">
                   <Sparkles size={13} /> Independent digital studio
@@ -101,8 +101,7 @@ export default function HomePage() {
                 </div>
               </ScrollReveal>
             </div>
-
-
+            <HeroSideArt />
           </div>
           <div className="mt-10 flex items-center justify-between border-t border-white/10 py-5 text-[10px] uppercase tracking-[0.3em] text-slate-400">
             <span>Strategy / Design / Development</span>
@@ -148,7 +147,7 @@ export default function HomePage() {
             <ScrollReveal key={title} delay={index * 0.045}>
               <Link to="/services" className="service-tile group block overflow-hidden border border-white/10 bg-[#071126] transition duration-500 hover:-translate-y-1 hover:border-cyan-200/50">
                 <div className="service-tile-image relative">
-                  <img src={image} alt="" className={`h-44 w-full transition duration-700 group-hover:scale-105 ${title === 'App Development' ? 'bg-[#08152d] object-contain p-3' : 'object-cover'}`} loading="lazy" />
+                  <img src={image} alt="" className={`h-44 w-full transition duration-700 group-hover:scale-105 ${title === 'App Development' ? 'bg-[#08152d] object-contain p-3' : 'object-cover'}`} loading="lazy" decoding="async" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#071126] via-transparent to-transparent" />
                   <span className="absolute left-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-[#05082F]/70 text-cyan-200 backdrop-blur"><Icon size={16} /></span>
                   <span className="absolute bottom-4 right-4 text-[10px] tracking-[0.2em] text-slate-300">0{index + 1}</span>
@@ -176,7 +175,7 @@ export default function HomePage() {
             <ScrollReveal key={project.title} delay={index * 0.07} direction={index % 2 ? 'right' : 'left'} className={index === 0 ? 'md:col-span-2' : ''}>
               <Link to="/portfolio" className={`project-card group block ${index === 0 ? 'grid items-end gap-6 md:grid-cols-[1.35fr_0.65fr]' : ''}`}>
                 <div className="project-preview overflow-hidden border border-white/10 bg-[#0a1430]">
-                  <img src={project.image} alt={project.title} className={`h-full w-full transition duration-700 group-hover:scale-[1.035] ${project.title === 'Mobile Application Design' ? 'bg-[#08152d] object-contain p-5' : 'object-cover'} ${index === 0 ? 'aspect-[1.8/1]' : 'aspect-[1.2/1]'}`} loading="lazy" />
+                  <img src={project.image} alt={project.title} className={`h-full w-full transition duration-700 group-hover:scale-[1.035] ${project.title === 'Mobile Application Design' ? 'bg-[#08152d] object-contain p-5' : 'object-cover'} ${index === 0 ? 'aspect-[1.8/1]' : 'aspect-[1.2/1]'}`} loading="lazy" decoding="async" />
                   <span className="project-preview-arrow"><MoveUpRight size={18} /></span>
                 </div>
                 <div className="project-caption flex items-start justify-between gap-4 pt-4 md:pt-5">
@@ -210,7 +209,7 @@ export default function HomePage() {
               <ScrollReveal key={item} delay={index * 0.06}>
                 <div className="why-row group flex items-start gap-5 border-t border-white/10 py-5">
                   <span className="pt-1 text-xs tracking-[0.18em] text-cyan-300">0{index + 1}</span>
-                  <p className="text-base leading-7 text-slate-200 transition group-hover:text-white">{item}</p>
+                  <p className="min-w-0 flex-1 text-base leading-7 text-slate-200 transition group-hover:text-white">{item}</p>
                   <MoveUpRight size={16} className="ml-auto mt-1 shrink-0 text-slate-500 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-200" />
                 </div>
               </ScrollReveal>
@@ -236,7 +235,7 @@ export default function HomePage() {
                 <div className="process-step group grid grid-cols-[52px_1fr] gap-4 border-t border-white/15 py-7 md:grid-cols-[78px_1fr] md:gap-6 md:py-9">
                   <span className="text-sm tracking-[0.2em] text-cyan-300">{step}</span>
                   <div>
-                    <h3 className="flex items-center justify-between text-2xl font-medium text-white md:text-3xl">{title}<MoveUpRight size={18} className="text-slate-500 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-cyan-200" /></h3>
+                    <h3 className="flex items-center justify-between gap-4 text-2xl font-medium text-white md:text-3xl">{title}<MoveUpRight size={18} className="shrink-0 text-slate-500 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-cyan-200" /></h3>
                     <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">{text}</p>
                   </div>
                 </div>
@@ -263,7 +262,7 @@ export default function HomePage() {
             <ScrollReveal key={name} delay={index * 0.08}>
               <article className="founder-card group overflow-hidden border border-white/10 bg-white/[0.025]">
                 <div className="founder-image-wrap overflow-hidden">
-                  <img src={image} alt={`${name}, ${role}`} className="h-[380px] w-full object-cover transition duration-700 group-hover:scale-[1.035] md:h-[430px]" loading="lazy" />
+                  <img src={image} alt={`${name}, ${role}`} className="h-[380px] w-full object-cover transition duration-700 group-hover:scale-[1.035] md:h-[430px]" loading="lazy" decoding="async" />
                   <span className="founder-number">0{index + 1}</span>
                 </div>
                 <div className="p-6">

@@ -91,7 +91,7 @@ export default function ServicesPage() {
                   src={image}
                   alt={`${title} visual`}
                   className={`service-art-image absolute inset-0 h-full w-full ${title === 'App Development' ? 'object-contain p-5 md:p-8' : 'object-cover'}`}
-                  loading="lazy"
+                  loading="lazy" decoding="async"
                 />
                 <div className="service-art-shade" aria-hidden="true" />
                 <div className="pointer-events-none absolute bottom-4 right-5 z-10 text-[9px] uppercase tracking-[0.24em] text-white/85">UMJ DIGITAL / 0{index + 1}</div>

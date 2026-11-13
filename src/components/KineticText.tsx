@@ -1,5 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 
 type KineticTextProps = {
   text: string;
@@ -8,50 +7,59 @@ type KineticTextProps = {
 };
 
 export default function KineticText({ text, className = '', mode = 'words' }: KineticTextProps) {
-  const reduceMotion = useReducedMotion();
+  const ref = useRef<HTMLSpanElement>(null);
+  const [shown, setShown] = useState(false);
   const words = text.split(' ');
-  const step = mode === 'characters' ? 0.018 : 0;
+  const step = mode === 'characters' ? 0.012 : 0;
 
-  if (reduceMotion) return <span className={className}>{text}</span>;
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced || !('IntersectionObserver' in window)) {
+      setShown(true);
+      return;
+    }
+
+    const rect = element.getBoundingClientRect();
+    const viewHeight = window.innerHeight || document.documentElement.clientHeight;
+    if (rect.top <= viewHeight * 0.85 && rect.bottom >= 0) {
+      setShown(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShown(true);
+        observer.disconnect();
+      },
+      { threshold: 0.45 },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <motion.span
-      aria-label={text}
-      className={className}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount: 0.45 }}
-      variants={{ hidden: {}, show: {} }}
-    >
+    <span ref={ref} aria-label={text} className={`${className}${shown ? ' kinetic-on' : ''}`}>
       {words.map((word, wordIndex) => (
         <Fragment key={`${word}-${wordIndex}`}>
           <span className="kinetic-word">
-            {(mode === 'characters' ? [...word] : [word]).map((part, partIndex) => (
-              <span key={`${part}-${partIndex}`} className="kinetic-mask" aria-hidden="true">
-                <motion.span
-                  className="kinetic-piece"
-                  variants={{
-                    hidden: { y: '110%', rotate: 3, opacity: 0 },
-                    show: {
-                      y: 0,
-                      rotate: 0,
-                      opacity: 1,
-                      transition: {
-                        duration: 0.68,
-                        delay: wordIndex * 0.055 + partIndex * step,
-                        ease: [0.22, 1, 0.36, 1],
-                      },
-                    },
-                  }}
-                >
-                  {part}
-                </motion.span>
-              </span>
-            ))}
+            {(mode === 'characters' ? [...word] : [word]).map((part, partIndex) => {
+              const delay = Math.min(wordIndex * 0.04 + partIndex * step, 0.36);
+              return (
+                <span key={`${part}-${partIndex}`} className="kinetic-mask" aria-hidden="true">
+                  <span className="kinetic-piece" style={delay > 0 ? { animationDelay: `${delay}s` } : undefined}>
+                    {part}
+                  </span>
+                </span>
+              );
+            })}
           </span>
           {wordIndex < words.length - 1 ? ' ' : null}
         </Fragment>
       ))}
-    </motion.span>
+    </span>
   );
 }
