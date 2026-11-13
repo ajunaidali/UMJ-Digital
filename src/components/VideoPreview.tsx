@@ -42,8 +42,18 @@ export default function VideoPreview({ poster, className = '', label }: VideoPre
       return;
     }
 
-    void video.play().then(() => setVideoLoaded(true)).catch(() => setVideoFailed(true));
-    return () => video.pause();
+    let cancelled = false;
+    void video.play().then(() => {
+      if (!cancelled) setVideoLoaded(true);
+    }).catch((error: unknown) => {
+      if (cancelled) return;
+      if (error instanceof DOMException && error.name === 'AbortError') return;
+      setVideoFailed(true);
+    });
+    return () => {
+      cancelled = true;
+      video.pause();
+    };
   }, [isNearViewport, reduceMotion, videoFailed]);
 
   return (

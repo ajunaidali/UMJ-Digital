@@ -45,6 +45,7 @@ export default function HeroAnimation({ active, motionAllowed }: HeroAnimationPr
           progressiveLoad: true,
         },
       });
+      animation.setSubframe(false);
       animationRef.current = animation;
       animation.addEventListener('DOMLoaded', handleLoaded);
       animation.addEventListener('data_failed', handleFailure);

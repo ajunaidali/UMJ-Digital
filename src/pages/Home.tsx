@@ -2,7 +2,6 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion
 import { ArrowDownRight, ArrowRight, BadgeCheck, ChevronRight, MoveUpRight, Sparkles } from 'lucide-react';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import HeroScene from '../components/HeroScene';
 import KineticText from '../components/KineticText';
 import MagneticLink from '../components/MagneticLink';
 import Marquee from '../components/Marquee';
@@ -56,7 +55,7 @@ function StorySection() {
             <img src={assets.hero.object3} alt="" width="1392" height="720" loading="lazy" />
           </div>
           <div className="story-art-overlay" />
-          <div className="absolute inset-x-6 bottom-6 flex items-end justify-between gap-6 md:inset-x-10 md:bottom-10">
+          <div className="absolute inset-x-6 bottom-6 z-10 flex items-end justify-between gap-6 md:inset-x-10 md:bottom-10">
             <p className="max-w-sm text-2xl font-medium leading-tight tracking-tight text-white md:text-4xl">Different disciplines.<br />One connected vision.</p>
             <span className="shrink-0 text-xs uppercase tracking-[0.26em] text-cyan-200">UMJ / DIGITAL</span>
           </div>
@@ -73,14 +72,14 @@ export default function HomePage() {
         <div className="hero-ambient hero-ambient-one" aria-hidden="true" />
         <div className="hero-ambient hero-ambient-two" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center gap-8 lg:grid-cols-[1.04fr_0.96fr] lg:gap-10">
-            <div className="relative z-10 pb-8">
+          <div className="flex items-center">
+            <div className="relative z-10 min-w-0 pb-8">
               <ScrollReveal direction="left">
                 <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-2 text-[10px] font-medium uppercase tracking-[0.3em] text-cyan-100">
                   <Sparkles size={13} /> Independent digital studio
                 </div>
               </ScrollReveal>
-              <h1 className="max-w-3xl text-[clamp(3.2rem,7.2vw,6.6rem)] font-medium leading-[0.91] tracking-[-0.075em] text-white">
+              <h1 className="max-w-3xl text-[clamp(2.45rem,7.2vw,6.6rem)] font-medium leading-[0.91] tracking-[-0.075em] text-white">
                 <KineticText text="We Create Digital Experiences That Move Businesses Forward." mode="characters" />
               </h1>
               <ScrollReveal delay={0.28} direction="left">
@@ -103,9 +102,7 @@ export default function HomePage() {
               </ScrollReveal>
             </div>
 
-            <ScrollReveal direction="right" delay={0.12} className="relative">
-              <HeroScene />
-            </ScrollReveal>
+
           </div>
           <div className="mt-10 flex items-center justify-between border-t border-white/10 py-5 text-[10px] uppercase tracking-[0.3em] text-slate-400">
             <span>Strategy / Design / Development</span>

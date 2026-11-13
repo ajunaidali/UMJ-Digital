@@ -1,15 +1,34 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { assets } from '../config/assets';
 import { navItems } from '../data/siteData';
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.classList.toggle('nav-open', mobileOpen);
+    return () => document.body.classList.remove('nav-open');
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#05082F]/85 backdrop-blur-xl">
+    <header className="site-header sticky top-0 z-50 border-b border-white/10 bg-[#05082F]/85 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <Link to="/" className="flex items-center gap-3" aria-label="UMJ Digital home">
           <img src={assets.branding.logoPrimarySvg} alt="UMJ Digital" className="h-10 w-auto" width="707" height="357" />
@@ -45,6 +64,8 @@ export default function Header() {
         <button
           type="button"
           aria-label="Toggle navigation"
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav"
           className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white md:hidden"
           onClick={() => setMobileOpen((value) => !value)}
         >
@@ -59,6 +80,7 @@ export default function Header() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            id="mobile-nav"
             className="overflow-hidden border-t border-white/10 bg-[#05082F] md:hidden"
           >
             <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4">
@@ -76,6 +98,13 @@ export default function Header() {
                   </NavLink>
                 </motion.div>
               ))}
+              <Link
+                to="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="mt-1 inline-flex items-center justify-center rounded-full border border-cyan-400/70 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-200"
+              >
+                Book a Call
+              </Link>
             </div>
           </motion.div>
         )}

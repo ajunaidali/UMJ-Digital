@@ -21,13 +21,17 @@ export default function AmbientCursor() {
       if (frame) return;
       frame = window.requestAnimationFrame(() => {
         cursor.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        cursor.classList.add('is-on');
         frame = 0;
       });
     };
+    const hide = () => cursor.classList.remove('is-on');
 
     window.addEventListener('pointermove', move, { passive: true });
+    document.documentElement.addEventListener('pointerleave', hide);
     return () => {
       window.removeEventListener('pointermove', move);
+      document.documentElement.removeEventListener('pointerleave', hide);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, []);

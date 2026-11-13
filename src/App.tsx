@@ -1,28 +1,29 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useEffect } from 'react';
-import type { ReactNode } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import AmbientCursor from './components/AmbientCursor';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import { assets } from './config/assets';
-import ContactPage from './pages/Contact';
-import FaqsPage from './pages/Faqs';
-import HomePage from './pages/Home';
-import PortfolioPage from './pages/Portfolio';
-import ServicesPage from './pages/Services';
+
+const HomePage = lazy(() => import('./pages/Home'));
+const ServicesPage = lazy(() => import('./pages/Services'));
+const FaqsPage = lazy(() => import('./pages/Faqs'));
+const PortfolioPage = lazy(() => import('./pages/Portfolio'));
+const ContactPage = lazy(() => import('./pages/Contact'));
 
 function PageMotion({ children }: { children: ReactNode }) {
   const reduceMotion = useReducedMotion();
 
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-      transition={{ duration: reduceMotion ? 0 : 0.32, ease: [0.22, 1, 0.36, 1] }}
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={reduceMotion ? undefined : { opacity: 0 }}
+      transition={{ duration: reduceMotion ? 0 : 0.24, ease: [0.22, 1, 0.36, 1] }}
     >
-      {children}
+      <Suspense fallback={<div className="min-h-[50vh]" />}>{children}</Suspense>
     </motion.div>
   );
 }
@@ -35,15 +36,11 @@ export default function App() {
   }, [location.pathname]);
 
   return (
-    <div
-      className="min-h-screen bg-[#05082F] text-white"
-      style={{
-        backgroundImage: `linear-gradient(180deg, rgba(5, 8, 47, .92), rgba(5, 8, 47, .97)), url("${assets.backgrounds.site}")`,
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        backgroundSize: 'cover',
-      }}
-    >
+    <div className="site-content min-h-screen text-white">
+      <div
+        className="site-backdrop"
+        style={{ '--site-bg': `url("${assets.backgrounds.site}")` } as CSSProperties}
+      />
       <AmbientCursor />
       <Header />
       <main>

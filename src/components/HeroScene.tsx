@@ -25,6 +25,7 @@ export default function HeroScene() {
   const [isVisible, setIsVisible] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [isDocumentVisible, setIsDocumentVisible] = useState(true);
+  const [heavyReady, setHeavyReady] = useState(false);
 
   useEffect(() => {
     const desktop = window.matchMedia('(min-width: 768px) and (pointer: fine)');
@@ -40,6 +41,17 @@ export default function HeroScene() {
     updateVisibility();
     document.addEventListener('visibilitychange', updateVisibility);
     return () => document.removeEventListener('visibilitychange', updateVisibility);
+  }, []);
+
+  useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    if (connection?.saveData || connection?.effectiveType === '2g' || connection?.effectiveType === 'slow-2g') return;
+
+    const enable = () => setHeavyReady(true);
+    const idleId = window.requestIdleCallback?.(enable, { timeout: 1200 });
+    if (idleId !== undefined) return () => window.cancelIdleCallback(idleId);
+    const timeoutId = window.setTimeout(enable, 350);
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   useEffect(() => {
@@ -67,14 +79,14 @@ export default function HeroScene() {
   return (
     <div ref={containerRef} className="hero-scene-shell" role="img" aria-label="Animated UMJ Digital hero artwork">
       <img src={assets.hero.main} alt="" className="hero-scene-art" width="1332" height="712" fetchPriority="high" />
-      <img src={assets.hero.texture} alt="" className="hero-scene-texture" width="1370" height="716" loading="lazy" decoding="async" />
+      <img src={assets.hero.texture} alt="" className="hero-scene-texture" width="1370" height="716" decoding="async" />
       <SceneFallback />
-      {isNearViewport && (
+      {heavyReady && isNearViewport && (
         <Suspense fallback={null}>
           <HeroAnimation active={isVisible && isDocumentVisible} motionAllowed={!reduceMotion} />
         </Suspense>
       )}
-      {show3D && (
+      {heavyReady && show3D && (
         <Suspense fallback={null}>
           <HeroScene3D active={isVisible && isDocumentVisible} />
         </Suspense>

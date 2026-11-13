@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ArrowDownRight, ArrowUpRight, MoveUpRight } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import KineticText from '../components/KineticText';
 import Marquee from '../components/Marquee';
@@ -11,6 +11,70 @@ import { assets } from '../config/assets';
 import { featuredProjects } from '../data/siteData';
 
 const filters = ['All', 'Real Project', 'Concept Work', 'Sample Work'];
+
+function LiveSiteFrame() {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [loadFrame, setLoadFrame] = useState(false);
+  const [engaged, setEngaged] = useState(false);
+
+  useEffect(() => {
+    const element = frameRef.current;
+    if (!element) return;
+    if (!('IntersectionObserver' in window)) {
+      setLoadFrame(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setLoadFrame(true);
+      observer.disconnect();
+    }, { rootMargin: '200px 0px' });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!engaged) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!frameRef.current?.contains(event.target as Node)) setEngaged(false);
+    };
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, [engaged]);
+
+  return (
+    <div ref={frameRef} className="portfolio-desktop">
+      <div className="portfolio-browser-bar">
+        <div className="portfolio-browser-dots"><i /><i /><i /></div>
+        <span>ahmedengineeringcompany.vercel.app</span>
+        <ArrowUpRight size={13} />
+      </div>
+      {loadFrame ? (
+        <iframe
+          src="https://ahmedengineeringcompany.vercel.app/"
+          title="Live Ahmed Engineering Company website preview"
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          className="portfolio-live-frame"
+          style={{ pointerEvents: engaged ? 'auto' : 'none' }}
+        />
+      ) : (
+        <div className="portfolio-live-frame" />
+      )}
+      {!engaged && (
+        <div
+          className="absolute inset-0 z-[2]"
+          aria-hidden="true"
+          onPointerUp={(event) => {
+            if (event.pointerType !== 'mouse') return;
+            setEngaged(true);
+          }}
+        />
+      )}
+    </div>
+  );
+}
 
 export default function PortfolioPage() {
   const [selectedFilter, setSelectedFilter] = useState('All');
@@ -52,7 +116,7 @@ export default function PortfolioPage() {
               type="button"
               onClick={() => setSelectedFilter(filter)}
               aria-pressed={selectedFilter === filter}
-              className={`portfolio-filter relative rounded-full border px-4 py-2.5 text-xs font-medium transition ${
+              className={`portfolio-filter relative min-h-11 rounded-full border px-4 py-2.5 text-xs font-medium transition ${
                 selectedFilter === filter ? 'border-cyan-200 bg-cyan-300 text-slate-950' : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-cyan-200/50 hover:text-white'
               }`}
             >
@@ -63,13 +127,12 @@ export default function PortfolioPage() {
         <span className="text-[10px] uppercase tracking-[0.25em] text-slate-500">{filteredProjects.length} projects / UMJ DIGITAL</span>
       </div>
 
-      <AnimatePresence mode="popLayout" initial={false}>
+      <AnimatePresence initial={false}>
         {showRealProject && (
           <motion.section
             key="ahmed-engineering-feature"
-            layout
-            initial={reduceMotion ? false : { opacity: 0, y: 28, clipPath: 'inset(0 0 15% 0)' }}
-            animate={{ opacity: 1, y: 0, clipPath: 'inset(0 0 0% 0)' }}
+            initial={reduceMotion ? false : { opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={reduceMotion ? undefined : { opacity: 0, y: -16 }}
             transition={{ duration: reduceMotion ? 0 : 0.58, ease: [0.22, 1, 0.36, 1] }}
             className="portfolio-feature mt-10 overflow-hidden border border-white/10 bg-[#071126]"
@@ -99,20 +162,7 @@ export default function PortfolioPage() {
               </div>
 
               <div className="portfolio-device-stage">
-                <div className="portfolio-desktop">
-                  <div className="portfolio-browser-bar">
-                    <div className="portfolio-browser-dots"><i /><i /><i /></div>
-                    <span>ahmedengineeringcompany.vercel.app</span>
-                    <ArrowUpRight size={13} />
-                  </div>
-                  <iframe
-                    src="https://ahmedengineeringcompany.vercel.app/"
-                    title="Live Ahmed Engineering Company website preview"
-                    loading="lazy"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    className="portfolio-live-frame"
-                  />
-                </div>
+                <LiveSiteFrame />
                 <div className="portfolio-mobile" aria-label="Ahmed Engineering Company mobile preview">
                   <div className="portfolio-mobile-speaker" />
                   <img src={assets.portfolio.ahmedEngineering} alt="Ahmed Engineering Company responsive project visual" loading="lazy" />
@@ -124,16 +174,15 @@ export default function PortfolioPage() {
         )}
       </AnimatePresence>
 
-      <motion.div layout className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2">
-        <AnimatePresence mode="popLayout" initial={false}>
+      <motion.div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2">
+        <AnimatePresence initial={false}>
           {galleryProjects.map((project, index) => (
             <motion.article
               key={project.title}
-              layout
-              initial={reduceMotion ? false : { opacity: 0, y: 26, scale: 0.985 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0, y: -12, scale: 0.985 }}
-              transition={{ duration: reduceMotion ? 0 : 0.45, delay: reduceMotion ? 0 : index * 0.045, ease: [0.22, 1, 0.36, 1] }}
+              initial={reduceMotion ? false : { opacity: 0, y: 26 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
+              transition={{ duration: reduceMotion ? 0 : 0.45, delay: reduceMotion ? 0 : Math.min(index, 4) * 0.045, ease: [0.22, 1, 0.36, 1] }}
               className="portfolio-project group"
             >
               <motion.a
@@ -141,10 +190,10 @@ export default function PortfolioPage() {
                 target={project.link !== '#' ? '_blank' : undefined}
                 rel={project.link !== '#' ? 'noreferrer' : undefined}
                 aria-label={project.link !== '#' ? `Open ${project.title}` : undefined}
-                initial={reduceMotion ? false : { clipPath: 'inset(0 0 100% 0)' }}
-                whileInView={{ clipPath: 'inset(0 0 0% 0)' }}
+                initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: reduceMotion ? 0 : 0.75, delay: reduceMotion ? 0 : index * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: reduceMotion ? 0 : 0.6, ease: [0.22, 1, 0.36, 1] }}
                 className={`portfolio-project-image relative block overflow-hidden border border-white/10 bg-[#09152b] ${project.link === '#' ? 'cursor-default' : ''}`}
               >
                 {project.category === 'Content Production' ? (
@@ -152,7 +201,7 @@ export default function PortfolioPage() {
                 ) : (
                   <img src={project.image} alt={project.title} className={`aspect-[1.48/1] w-full transition duration-700 group-hover:scale-[1.04] ${project.title === 'Mobile Application Design' ? 'bg-[#08152d] object-contain p-6' : 'object-cover'}`} loading="lazy" />
                 )}
-                <span className="portfolio-project-index">0{index + 1} / 05</span>
+                <span className="portfolio-project-index">0{index + 1} / {String(galleryProjects.length).padStart(2, '0')}</span>
                 <span className="portfolio-project-arrow"><MoveUpRight size={17} /></span>
               </motion.a>
               <div className="mt-4 flex items-start justify-between gap-4">

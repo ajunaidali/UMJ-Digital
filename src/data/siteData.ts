@@ -1,4 +1,4 @@
-import { ArrowUpRight, Briefcase, Compass, Cpu, Globe2, Layers3, Megaphone, PencilLine, Smartphone, Sparkles, Video, Wrench } from 'lucide-react';
+import { ArrowUpRight, Briefcase, Globe2, Layers3, Megaphone, PencilLine, Smartphone, Video } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { assets } from '../config/assets';
 
@@ -168,13 +168,6 @@ export const trustStats = [
   { label: 'Core Focus', value: 'Brand + Growth' },
   { label: 'Approach', value: 'Strategy-first' },
   { label: 'Delivery', value: 'Global' },
-];
-
-export const homeHighlights = [
-  { title: 'Web & App', text: 'Sales-driven digital experiences built for conversion and usability.', icon: Cpu },
-  { title: 'Brand Systems', text: 'Memorable identity direction that gives your business a stronger visual edge.', icon: Sparkles },
-  { title: 'Content & Growth', text: 'Campaign assets and digital storytelling built to engage, convert and retain.', icon: Wrench },
-  { title: 'Creative Direction', text: 'A blended strategic and artistic process shaped by clarity and performance.', icon: Compass },
 ];
 
 export const serviceHighlights = [

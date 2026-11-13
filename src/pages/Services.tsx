@@ -31,7 +31,7 @@ export default function ServicesPage() {
       <section className="mt-16 grid gap-0 border-y border-white/10 md:grid-cols-3">
         {serviceHighlights.map(({ title, text, icon: Icon }, index) => (
           <ScrollReveal key={title} delay={index * 0.07}>
-            <div className="service-highlight h-full border-b border-white/10 py-6 md:border-b-0 md:border-r md:px-6 md:py-8 last:md:border-r-0 first:md:pl-0">
+            <div className={`service-highlight h-full border-b border-white/10 py-6 md:border-b-0 md:px-6 md:py-8 ${index === 0 ? 'md:pl-0' : ''} ${index === serviceHighlights.length - 1 ? 'md:border-r-0 md:pr-0' : 'md:border-r'}`}>
               <div className="flex items-start justify-between gap-5">
                 <div>
                   <span className="text-[10px] tracking-[0.2em] text-cyan-300">0{index + 1} / PRINCIPLE</span>

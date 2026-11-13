@@ -65,7 +65,7 @@ export default function HeroScene3D({ active }: HeroScene3DProps) {
 
     let renderer: WebGLRenderer;
     try {
-      renderer = new WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
+      renderer = new WebGLRenderer({ alpha: true, antialias: false, powerPreference: 'low-power' });
     } catch (error) {
       console.error('Unable to initialize the hero WebGL scene.', error);
       return;
@@ -75,7 +75,7 @@ export default function HeroScene3D({ active }: HeroScene3DProps) {
     const camera = new PerspectiveCamera(40, 1, 0.1, 100);
     camera.position.set(0, 0, 5.2);
     renderer.outputColorSpace = SRGBColorSpace;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
     renderer.setClearColor(0x000000, 0);
     renderer.domElement.setAttribute('aria-hidden', 'true');
     host.appendChild(renderer.domElement);
@@ -138,7 +138,7 @@ export default function HeroScene3D({ active }: HeroScene3DProps) {
       new MeshStandardMaterial({ color, metalness, roughness, emissive, emissiveIntensity: emissive ? 0.22 : 0 });
 
     const core = new Mesh(
-      new TorusKnotGeometry(0.82, 0.045, 160, 12, 2, 3),
+      new TorusKnotGeometry(0.82, 0.045, 72, 8, 2, 3),
       makeMaterial(0x45eaf4, 0.82, 0.18, 0x45eaf4),
     );
     core.rotation.set(0.4, 0.25, -0.3);
@@ -225,12 +225,19 @@ export default function HeroScene3D({ active }: HeroScene3DProps) {
     resize();
 
     let lastFrameTime = 0;
+    let lastRenderTime = 0;
     let elapsed = 0;
     const draw = (time: number) => {
       if (!activeRef.current) {
         frameRef.current = null;
         return;
       }
+
+      if (time - lastRenderTime < 32) {
+        frameRef.current = window.requestAnimationFrame(draw);
+        return;
+      }
+      lastRenderTime = time;
 
       const delta = lastFrameTime ? Math.min((time - lastFrameTime) / 1000, 0.04) : 0;
       lastFrameTime = time;
