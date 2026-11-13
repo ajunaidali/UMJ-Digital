@@ -30,22 +30,22 @@ export default function ScrollReveal({
 
     const rect = element.getBoundingClientRect();
     const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-    if (rect.top <= viewHeight * 0.92 && rect.bottom >= 0) {
-      reveal();
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
+      if (rect.top <= viewHeight * 0.95 && rect.bottom >= 0) {
         reveal();
-        observer.disconnect();
-      },
-      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
-    );
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, []);
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return;
+          reveal();
+          observer.disconnect();
+        },
+        { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
+      );
+      observer.observe(element);
+      return () => observer.disconnect();
+    }, []);
 
   return (
     <div

@@ -24,20 +24,11 @@ export default function HeroSideArt() {
   const frameRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
   const reduceMotion = prefersReduced ?? window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [desktop, setDesktop] = useState(() => window.matchMedia('(min-width: 1024px)').matches);
   const [active, setActive] = useState(true);
   const [armLottie, setArmLottie] = useState(false);
   const [lottieFailed, setLottieFailed] = useState(false);
   const blocked = connectionBlocked();
-  const playLottie = desktop && !reduceMotion && !blocked && !lottieFailed;
-
-  useEffect(() => {
-    const media = window.matchMedia('(min-width: 1024px)');
-    const update = () => setDesktop(media.matches);
-    update();
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, []);
+  const playLottie = !reduceMotion && !blocked && !lottieFailed;
 
   useEffect(() => {
     if (!playLottie) return;
@@ -50,7 +41,7 @@ export default function HeroSideArt() {
 
   useEffect(() => {
     const element = frameRef.current;
-    if (!element || !desktop) return;
+    if (!element) return;
 
     const sync = (visible: boolean) => setActive(visible && document.visibilityState === 'visible');
     const observer = new IntersectionObserver(
@@ -67,38 +58,36 @@ export default function HeroSideArt() {
       observer.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [desktop]);
+}, []);
 
-  if (!desktop) return null;
-
-  return (
-    <div className="hero-side" aria-hidden="true">
-      <div ref={frameRef} className="hero-side-frame">
-        <span className="hero-side-orbit" />
-        <span className="hero-side-orbit hero-side-orbit-inner" />
-        <div className="hero-side-stage">
-          {playLottie && armLottie ? (
-            <Suspense fallback={null}>
-              <HeroAnimation
-                active={active}
-                motionAllowed
-                fit="meet"
-                onError={() => setLottieFailed(true)}
-              />
-            </Suspense>
-          ) : (
-            <SideFallback />
-          )}
-          <span className="hero-side-corner hero-side-corner-tl" />
-          <span className="hero-side-corner hero-side-corner-tr" />
-          <span className="hero-side-corner hero-side-corner-bl" />
-          <span className="hero-side-corner hero-side-corner-br" />
-        </div>
-        <span className="hero-side-tile hero-side-tile-a" />
-        <span className="hero-side-tile hero-side-tile-b" />
-        <span className="hero-side-tile hero-side-tile-c" />
+return (
+  <div className="hero-side" aria-hidden="true">
+    <div ref={frameRef} className="hero-side-frame">
+      <span className="hero-side-orbit" />
+      <span className="hero-side-orbit hero-side-orbit-inner" />
+      <div className="hero-side-stage">
+        {playLottie && armLottie ? (
+          <Suspense fallback={null}>
+            <HeroAnimation
+              active={active}
+              motionAllowed
+              fit="meet"
+              onError={() => setLottieFailed(true)}
+            />
+          </Suspense>
+        ) : (
+          <SideFallback />
+        )}
+        <span className="hero-side-corner hero-side-corner-tl" />
+        <span className="hero-side-corner hero-side-corner-tr" />
+        <span className="hero-side-corner hero-side-corner-bl" />
+        <span className="hero-side-corner hero-side-corner-br" />
       </div>
-      <span className="hero-side-label">Fig. 01 — Ideas in motion</span>
+      <span className="hero-side-tile hero-side-tile-a" />
+      <span className="hero-side-tile hero-side-tile-b" />
+      <span className="hero-side-tile hero-side-tile-c" />
     </div>
-  );
+    <span className="hero-side-label">Fig. 01 — Ideas in motion</span>
+  </div>
+);
 }

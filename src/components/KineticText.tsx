@@ -28,22 +28,22 @@ export default function KineticText({ text, className = '', mode = 'words' }: Ki
 
     const rect = element.getBoundingClientRect();
     const viewHeight = window.innerHeight || document.documentElement.clientHeight;
-    if (rect.top <= viewHeight * 0.85 && rect.bottom >= 0) {
-      show();
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
+      if (rect.top <= viewHeight * 0.92 && rect.bottom >= 0) {
         show();
-        observer.disconnect();
-      },
-      { threshold: 0.35 },
-    );
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [text]);
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) return;
+          show();
+          observer.disconnect();
+        },
+        { threshold: 0.15 },
+      );
+      observer.observe(element);
+      return () => observer.disconnect();
+    }, [text]);
 
   return (
     <span ref={ref} className={className}>
@@ -57,23 +57,23 @@ export default function KineticText({ text, className = '', mode = 'words' }: Ki
           if (finished.current >= total) event.currentTarget.parentElement?.classList.add('kinetic-settled');
         }}
       >
-      {words.map((word, wordIndex) => (
-        <Fragment key={`${word}-${wordIndex}`}>
-          <span className="kinetic-word">
-            {(mode === 'characters' ? [...word] : [word]).map((part, partIndex) => {
-              const delay = Math.min(wordIndex * 0.04 + partIndex * step, 0.36);
-              return (
-                <span key={`${part}-${partIndex}`} className="kinetic-mask">
-                  <span className="kinetic-piece" style={delay > 0 ? { animationDelay: `${delay}s` } : undefined}>
-                    {part}
+        {words.map((word, wordIndex) => (
+          <Fragment key={`${word}-${wordIndex}`}>
+            <span className="kinetic-word">
+              {(mode === 'characters' ? [...word] : [word]).map((part, partIndex) => {
+                const delay = Math.min(wordIndex * 0.04 + partIndex * step, 0.36);
+                return (
+                  <span key={`${part}-${partIndex}`} className="kinetic-mask">
+                    <span className="kinetic-piece" style={delay > 0 ? { animationDelay: `${delay}s` } : undefined}>
+                      {part}
+                    </span>
                   </span>
-                </span>
-              );
-            })}
-          </span>
-          {wordIndex < words.length - 1 ? ' ' : null}
-        </Fragment>
-      ))}
+                );
+              })}
+            </span>
+            {wordIndex < words.length - 1 ? ' ' : null}
+          </Fragment>
+        ))}
       </span>
     </span>
   );
