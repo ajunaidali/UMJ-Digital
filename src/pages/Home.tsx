@@ -7,6 +7,7 @@ import KineticText from '../components/KineticText';
 import MagneticLink from '../components/MagneticLink';
 import Marquee from '../components/Marquee';
 import ScrollReveal from '../components/ScrollReveal';
+import SpotlightCard from '../components/SpotlightCard';
 import { assets } from '../config/assets';
 import { featuredProjects, founders, processSteps, services, trustStats, whyChooseUs } from '../data/siteData';
 
@@ -32,13 +33,13 @@ function StorySection() {
             <p className="mt-6 max-w-lg text-base leading-8 text-slate-300 md:text-lg">
               Strategy finds the signal. Design gives it form. Technology takes it further. We bring all three together to build brands with momentum.
             </p>
-            <MagneticLink to="/services" className="magnetic-link mt-8 inline-flex items-center gap-2 text-sm font-medium text-cyan-200">
-              How we can help <MoveUpRight size={16} />
-            </MagneticLink>
+              <MagneticLink to="/services" cursorLabel="view" className="magnetic-link mt-8 inline-flex items-center gap-2 text-sm font-medium text-cyan-200">
+                How we can help <MoveUpRight size={16} />
+              </MagneticLink>
           </ScrollReveal>
         </div>
         <motion.div
-          className="story-art relative overflow-hidden rounded-[2rem] border border-cyan-100/15"
+          className="story-art relative overflow-hidden rounded-[2rem] border border-cyan-100/20 shadow-[0_24px_80px_rgba(0,0,0,0.5),0_0_40px_rgba(69,234,244,0.1)]"
           style={{ y: reduceMotion ? 0 : imageY, rotate: reduceMotion ? 0 : imageRotate }}
         >
           <img
@@ -75,9 +76,9 @@ export default function HomePage() {
           <div className="grid items-center lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-14 xl:gap-x-16">
             <div className="relative z-10 min-w-0 pb-8 lg:max-w-3xl">
               <ScrollReveal direction="left">
-                <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-2 text-[10px] font-medium uppercase tracking-[0.3em] text-cyan-100">
-                  <Sparkles size={13} /> Independent digital studio
-                </div>
+                  <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/[0.06] px-4 py-2 text-[10px] font-medium uppercase tracking-[0.3em] text-cyan-100 shadow-[0_0_15px_rgba(69,234,244,0.12)]">
+                    <Sparkles size={13} className="text-cyan-300 animate-pulse" /> Independent digital studio
+                  </div>
               </ScrollReveal>
               <h1 className="max-w-3xl text-[clamp(2.45rem,7.2vw,6.6rem)] font-medium leading-[0.91] tracking-[-0.075em] text-white">
                 <KineticText text="We Create Digital Experiences That Move Businesses Forward." mode="characters" />
@@ -87,28 +88,36 @@ export default function HomePage() {
                   From powerful websites and mobile applications to creative branding and digital marketing, we help businesses transform ideas into meaningful digital experiences.
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                  <MagneticLink to="/portfolio" className="magnetic-link inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-3.5 text-sm font-semibold text-[#071025] transition hover:bg-white">
-                    Explore Our Work <ArrowRight size={17} />
-                  </MagneticLink>
-                  <MagneticLink to="/contact" className="magnetic-link inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3.5 text-sm font-medium text-white transition hover:border-cyan-200 hover:text-cyan-100">
-                    Let&apos;s Talk <MoveUpRight size={16} />
-                  </MagneticLink>
+                    <MagneticLink
+                      to="/portfolio"
+                      cursorLabel="view"
+                      className="magnetic-link inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-3.5 text-sm font-semibold text-[#071025] shadow-[0_0_20px_rgba(69,234,244,0.3)] transition hover:bg-white hover:shadow-[0_0_35px_rgba(69,234,244,0.6)]"
+                    >
+                      Explore Our Work <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
+                    </MagneticLink>
+                      <MagneticLink
+                        to="/contact"
+                        cursorLabel="chat"
+                        className="magnetic-link inline-flex items-center justify-center gap-2 rounded-full border border-white/20 px-6 py-3.5 text-sm font-medium text-white transition hover:border-cyan-200 hover:text-cyan-100 hover:shadow-[0_0_20px_rgba(69,234,244,0.2)]"
+                      >
+                        Let&apos;s Talk <MoveUpRight size={16} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                      </MagneticLink>
+                    </div>
+                    <div className="mt-9 flex flex-wrap gap-x-5 gap-y-3 text-xs uppercase tracking-[0.12em] text-slate-300">
+                      {['Web development', 'Mobile apps', 'UI/UX design', 'Brand & content', 'Digital marketing'].map((item) => (
+                    <span key={item} className="inline-flex items-center gap-2 transition-colors hover:text-cyan-100"><BadgeCheck size={14} className="text-cyan-300" />{item}</span>
+                      ))}
+                    </div>
+                  </ScrollReveal>
                 </div>
-                <div className="mt-9 flex flex-wrap gap-x-5 gap-y-3 text-xs uppercase tracking-[0.12em] text-slate-300">
-                  {['Web development', 'Mobile apps', 'UI/UX design', 'Brand & content', 'Digital marketing'].map((item) => (
-                    <span key={item} className="inline-flex items-center gap-2"><BadgeCheck size={14} className="text-cyan-300" />{item}</span>
-                  ))}
-                </div>
-              </ScrollReveal>
+                <HeroSideArt />
             </div>
-            <HeroSideArt />
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/10 py-5 text-[10px] uppercase tracking-[0.16em] text-slate-400 sm:tracking-[0.3em]">
+              <span>Strategy / Design / Development</span>
+              <span className="hidden items-center gap-2 sm:inline-flex"><ArrowDownRight size={14} className="text-cyan-300 animate-bounce" /> Scroll to explore</span>
+              <span>01 — {String(services.length).padStart(2, '0')}</span>
+            </div>
           </div>
-          <div className="mt-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/10 py-5 text-[10px] uppercase tracking-[0.16em] text-slate-400 sm:tracking-[0.3em]">
-            <span>Strategy / Design / Development</span>
-            <span className="hidden items-center gap-2 sm:inline-flex"><ArrowDownRight size={14} className="text-cyan-300" /> Scroll to explore</span>
-            <span>01 — {String(services.length).padStart(2, '0')}</span>
-          </div>
-        </div>
       </section>
 
       <Marquee />
@@ -117,10 +126,10 @@ export default function HomePage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {trustStats.map((stat, index) => (
             <ScrollReveal key={stat.label} delay={index * 0.06}>
-              <div className="stat-block group border-l border-cyan-300/30 py-2 pl-5 transition-colors hover:border-cyan-200">
-                <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">{stat.value}</div>
-                <div className="mt-2 text-[10px] uppercase tracking-[0.24em] text-slate-400">{stat.label}</div>
-              </div>
+                <div className="stat-block group border-l border-cyan-300/30 py-2 pl-5 transition-all duration-300 hover:border-cyan-200 hover:pl-6">
+                  <div className="text-2xl font-medium tracking-tight text-white transition-colors group-hover:text-cyan-100 md:text-3xl">{stat.value}</div>
+                  <div className="mt-2 text-[10px] uppercase tracking-[0.24em] text-slate-400">{stat.label}</div>
+                </div>
             </ScrollReveal>
           ))}
         </div>
@@ -145,18 +154,24 @@ export default function HomePage() {
         <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {services.map(({ title, summary, image, icon: Icon }, index) => (
             <ScrollReveal key={title} delay={index * 0.045}>
-              <Link to="/services" className="service-tile group block overflow-hidden border border-white/10 bg-[#071126] transition duration-500 hover:-translate-y-1 hover:border-cyan-200/50">
-                <div className="service-tile-image relative">
-                  <img src={image} alt="" className={`h-44 w-full transition duration-700 group-hover:scale-105 ${title === 'App Development' ? 'bg-[#08152d] object-contain p-3' : 'object-cover'}`} loading="lazy" decoding="async" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#071126] via-transparent to-transparent" />
-                  <span className="absolute left-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-[#05082F]/70 text-cyan-200 backdrop-blur"><Icon size={16} /></span>
-                  <span className="absolute bottom-4 right-4 text-[10px] tracking-[0.2em] text-slate-300">0{index + 1}</span>
-                </div>
-                <div className="px-5 pb-5 pt-1">
-                  <h3 className="text-lg font-medium leading-snug text-white">{title}</h3>
-                  <p className="mt-2 text-xs leading-6 text-slate-400">{summary}</p>
-                </div>
-              </Link>
+              <SpotlightCard className="h-full rounded-none" maxTilt={3}>
+                <Link
+                  to="/services"
+                  data-cursor="explore"
+                  className="service-tile group block h-full overflow-hidden border border-white/10 bg-[#071126] transition duration-500 hover:-translate-y-1 hover:border-cyan-200/50"
+                >
+                  <div className="service-tile-image relative">
+                    <img src={image} alt="" className={`h-44 w-full transition duration-700 group-hover:scale-105 ${title === 'App Development' ? 'bg-[#08152d] object-contain p-3' : 'object-cover'}`} loading="lazy" decoding="async" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#071126] via-transparent to-transparent" />
+                    <span className="absolute left-4 top-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 bg-[#05082F]/70 text-cyan-200 backdrop-blur shadow-[0_0_12px_rgba(69,234,244,0.2)]"><Icon size={16} /></span>
+                    <span className="absolute bottom-4 right-4 text-[10px] tracking-[0.2em] text-slate-300 transition-colors group-hover:text-cyan-300">0{index + 1}</span>
+                  </div>
+                  <div className="px-5 pb-5 pt-1">
+                    <h3 className="text-lg font-medium leading-snug text-white transition-colors group-hover:text-cyan-100">{title}</h3>
+                    <p className="mt-2 text-xs leading-6 text-slate-400">{summary}</p>
+                  </div>
+                </Link>
+              </SpotlightCard>
             </ScrollReveal>
           ))}
         </div>
@@ -168,24 +183,30 @@ export default function HomePage() {
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-cyan-300">Selected work</p>
             <h2 className="text-4xl font-semibold tracking-[-0.05em] text-white md:text-6xl"><KineticText text="Built to make an impression." /></h2>
           </ScrollReveal>
-          <Link to="/portfolio" className="magnetic-link hidden shrink-0 items-center gap-2 pb-2 text-sm text-cyan-200 md:inline-flex">All projects <ChevronRight size={16} /></Link>
+          <Link to="/portfolio" cursor-label="view" className="magnetic-link hidden shrink-0 items-center gap-2 pb-2 text-sm text-cyan-200 transition hover:text-white md:inline-flex">All projects <ChevronRight size={16} /></Link>
         </div>
         <div className="mt-12 grid gap-x-5 gap-y-10 md:grid-cols-2">
           {featuredProjects.slice(0, 3).map((project, index) => (
             <ScrollReveal key={project.title} delay={index * 0.07} direction={index % 2 ? 'right' : 'left'} className={index === 0 ? 'md:col-span-2' : ''}>
-              <Link to="/portfolio" className={`project-card group block ${index === 0 ? 'grid items-end gap-6 md:grid-cols-[1.35fr_0.65fr]' : ''}`}>
-                <div className="project-preview overflow-hidden border border-white/10 bg-[#0a1430]">
-                  <img src={project.image} alt={project.title} className={`h-full w-full transition duration-700 group-hover:scale-[1.035] ${project.title === 'Mobile Application Design' ? 'bg-[#08152d] object-contain p-5' : 'object-cover'} ${index === 0 ? 'aspect-[1.8/1]' : 'aspect-[1.2/1]'}`} loading="lazy" decoding="async" />
-                  <span className="project-preview-arrow"><MoveUpRight size={18} /></span>
-                </div>
-                <div className="project-caption flex items-start justify-between gap-4 pt-4 md:pt-5">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-[0.22em] text-cyan-200">{project.tag} / {project.category}</span>
-                    <h3 className="mt-2 text-xl font-medium text-white md:text-2xl">{project.title}</h3>
-                  </div>
-                  <span className="mt-2 text-xs text-slate-400">0{index + 1}</span>
-                </div>
-              </Link>
+                    <SpotlightCard className={`h-full ${index === 0 ? 'md:col-span-2' : ''}`} maxTilt={2.5}>
+                      <Link
+                        to="/portfolio"
+                        data-cursor="view"
+                        className={`project-card group block h-full ${index === 0 ? 'grid items-end gap-6 md:grid-cols-[1.35fr_0.65fr]' : ''}`}
+                      >
+                        <div className="project-preview overflow-hidden border border-white/10 bg-[#0a1430] transition duration-500 group-hover:border-cyan-300/40">
+                          <img src={project.image} alt={project.title} className={`h-full w-full transition duration-700 group-hover:scale-[1.035] ${project.title === 'Mobile Application Design' ? 'bg-[#08152d] object-contain p-5' : 'object-cover'} ${index === 0 ? 'aspect-[1.8/1]' : 'aspect-[1.2/1]'}`} loading="lazy" decoding="async" />
+                          <span className="project-preview-arrow"><MoveUpRight size={18} /></span>
+                        </div>
+                    <div className="project-caption flex items-start justify-between gap-4 pt-4 md:pt-5">
+                      <div>
+                        <span className="text-[10px] uppercase tracking-[0.22em] text-cyan-200">{project.tag} / {project.category}</span>
+                        <h3 className="mt-2 text-xl font-medium text-white transition-colors group-hover:text-cyan-100 md:text-2xl">{project.title}</h3>
+                      </div>
+                      <span className="mt-2 text-xs text-slate-400">0{index + 1}</span>
+                    </div>
+                  </Link>
+                </SpotlightCard>
             </ScrollReveal>
           ))}
         </div>
@@ -194,28 +215,28 @@ export default function HomePage() {
       <Marquee reverse />
 
       <section className="mx-auto mt-20 max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 rounded-[2rem] border border-white/10 bg-[linear-gradient(115deg,rgba(9,19,44,0.94),rgba(7,11,30,0.82))] p-7 md:p-12 lg:grid-cols-[0.8fr_1.2fr]">
-          <ScrollReveal>
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-cyan-300">Why UMJ Digital</p>
-            <h2 className="text-4xl font-semibold leading-[1.04] tracking-[-0.05em] text-white md:text-5xl">
-              <KineticText text="Clear thinking. Careful making." />
-            </h2>
-            <p className="mt-5 max-w-md text-sm leading-7 text-slate-300">
-              From the first conversation through final delivery, we make the complicated feel clear and the important feel intentional.
-            </p>
-          </ScrollReveal>
-          <div className="grid gap-0">
-            {whyChooseUs.map((item, index) => (
-              <ScrollReveal key={item} delay={index * 0.06}>
-                <div className="why-row group flex items-start gap-5 border-t border-white/10 py-5">
-                  <span className="pt-1 text-xs tracking-[0.18em] text-cyan-300">0{index + 1}</span>
-                  <p className="min-w-0 flex-1 text-base leading-7 text-slate-200 transition group-hover:text-white">{item}</p>
-                  <MoveUpRight size={16} className="ml-auto mt-1 shrink-0 text-slate-500 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-200" />
-                </div>
-              </ScrollReveal>
-            ))}
+          <div className="grid gap-12 rounded-[2rem] border border-white/10 bg-[linear-gradient(115deg,rgba(9,19,44,0.94),rgba(7,11,30,0.82))] p-7 shadow-[0_20px_60px_rgba(0,0,0,0.4)] md:p-12 lg:grid-cols-[0.8fr_1.2fr]">
+            <ScrollReveal>
+              <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-cyan-300">Why UMJ Digital</p>
+              <h2 className="text-4xl font-semibold leading-[1.04] tracking-[-0.05em] text-white md:text-5xl">
+                <KineticText text="Clear thinking. Careful making." />
+              </h2>
+              <p className="mt-5 max-w-md text-sm leading-7 text-slate-300">
+                From the first conversation through final delivery, we make the complicated feel clear and the important feel intentional.
+              </p>
+            </ScrollReveal>
+            <div className="grid gap-0">
+              {whyChooseUs.map((item, index) => (
+                <ScrollReveal key={item} delay={index * 0.06}>
+                  <div className="why-row group flex items-start gap-5 border-t border-white/10 py-5">
+                    <span className="pt-1 text-xs tracking-[0.18em] text-cyan-300 transition-colors group-hover:text-cyan-200">0{index + 1}</span>
+                    <p className="min-w-0 flex-1 text-base leading-7 text-slate-200 transition group-hover:text-white">{item}</p>
+                    <MoveUpRight size={16} className="ml-auto mt-1 shrink-0 text-slate-500 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cyan-200" />
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
-        </div>
       </section>
 
       <section className="mx-auto mt-32 max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -233,9 +254,9 @@ export default function HomePage() {
             {processSteps.map(({ step, title, text }, index) => (
               <ScrollReveal key={step} delay={index * 0.05}>
                 <div className="process-step group grid grid-cols-[52px_1fr] gap-4 border-t border-white/15 py-7 md:grid-cols-[78px_1fr] md:gap-6 md:py-9">
-                  <span className="text-sm tracking-[0.2em] text-cyan-300">{step}</span>
+                  <span className="text-sm tracking-[0.2em] text-cyan-300 transition-colors group-hover:text-cyan-200">{step}</span>
                   <div>
-                    <h3 className="flex items-center justify-between gap-4 text-2xl font-medium text-white md:text-3xl">{title}<MoveUpRight size={18} className="shrink-0 text-slate-500 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-cyan-200" /></h3>
+                    <h3 className="flex items-center justify-between gap-4 text-2xl font-medium text-white transition-colors group-hover:text-cyan-100 md:text-3xl">{title}<MoveUpRight size={18} className="shrink-0 text-slate-500 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-cyan-200" /></h3>
                     <p className="mt-3 max-w-xl text-sm leading-7 text-slate-300">{text}</p>
                   </div>
                 </div>
@@ -260,17 +281,19 @@ export default function HomePage() {
         <div className="mt-12 grid gap-6 lg:grid-cols-3">
           {founders.map(({ name, role, bio, image }, index) => (
             <ScrollReveal key={name} delay={index * 0.08}>
-              <article className="founder-card group overflow-hidden border border-white/10 bg-white/[0.025]">
-                <div className="founder-image-wrap overflow-hidden">
-                  <img src={image} alt={`${name}, ${role}`} className="h-[380px] w-full object-cover transition duration-700 group-hover:scale-[1.035] md:h-[430px]" loading="lazy" decoding="async" />
-                  <span className="founder-number">0{index + 1}</span>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-2xl font-medium text-white">{name}</h3>
-                  <p className="mt-2 text-[10px] uppercase leading-5 tracking-[0.18em] text-cyan-200">{role}</p>
-                  <p className="mt-4 text-sm leading-7 text-slate-300">{bio}</p>
-                </div>
-              </article>
+              <SpotlightCard className="h-full rounded-2xl" maxTilt={3}>
+                <article data-cursor="team" className="founder-card group h-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.025]">
+                  <div className="founder-image-wrap overflow-hidden">
+                    <img src={image} alt={`${name}, ${role}`} className="h-[380px] w-full object-cover transition duration-700 group-hover:scale-[1.035] md:h-[430px]" loading="lazy" decoding="async" />
+                    <span className="founder-number">0{index + 1}</span>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-2xl font-medium text-white transition-colors group-hover:text-cyan-100">{name}</h3>
+                    <p className="mt-2 text-[10px] uppercase leading-5 tracking-[0.18em] text-cyan-200">{role}</p>
+                    <p className="mt-4 text-sm leading-7 text-slate-300">{bio}</p>
+                  </div>
+                </article>
+              </SpotlightCard>
             </ScrollReveal>
           ))}
         </div>
@@ -278,20 +301,24 @@ export default function HomePage() {
 
       <section className="mx-auto mt-32 max-w-7xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal>
-          <div className="contact-cta relative overflow-hidden border border-cyan-100/20 px-7 py-12 md:px-12 md:py-16">
-            <div className="contact-cta-orbit" aria-hidden="true" />
-            <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-              <div className="max-w-3xl">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-cyan-200">The next move is yours</p>
-                <h2 className="mt-4 text-4xl font-semibold leading-[1.02] tracking-[-0.05em] text-white md:text-6xl">
-                  <KineticText text="Have a Project in Mind? Let's Build Something Great." />
-                </h2>
+            <div className="contact-cta relative overflow-hidden rounded-[2rem] border border-cyan-100/25 px-7 py-12 shadow-[0_0_60px_rgba(69,234,244,0.12)] md:px-12 md:py-16">
+              <div className="contact-cta-orbit" aria-hidden="true" />
+              <div className="relative z-10 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
+                <div className="max-w-3xl">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-cyan-200">The next move is yours</p>
+                  <h2 className="mt-4 text-4xl font-semibold leading-[1.02] tracking-[-0.05em] text-white md:text-6xl">
+                    <KineticText text="Have a Project in Mind? Let's Build Something Great." />
+                  </h2>
+                </div>
+                  <MagneticLink
+                    to="/contact"
+                    cursorLabel="start"
+                    className="magnetic-link inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-slate-950 shadow-[0_0_20px_rgba(255,255,255,0.3)] transition hover:bg-cyan-200 hover:shadow-[0_0_30px_rgba(69,234,244,0.6)]"
+                  >
+                    Start a Conversation <ArrowRight size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
+                  </MagneticLink>
               </div>
-              <MagneticLink to="/contact" className="magnetic-link inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-200">
-                Start a Conversation <ArrowRight size={17} />
-              </MagneticLink>
             </div>
-          </div>
         </ScrollReveal>
       </section>
     </div>

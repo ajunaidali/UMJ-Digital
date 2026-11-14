@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Check, LoaderCircle, Mail, MessageSquareText, Send } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
+import SpotlightCard from '../components/SpotlightCard';
 import { contactDeliveryConfig } from '../config/contact';
 import { services } from '../data/siteData';
 
@@ -98,87 +99,91 @@ export default function ContactPage() {
       />
 
       <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-8">
-          <h3 className="text-2xl font-semibold text-white">Start a conversation</h3>
-          <p className="mt-3 text-sm leading-7 text-slate-300">Tell us what you are building, what you need, and how to reach you.</p>
-          <div className="mt-8 space-y-5 text-sm text-slate-300">
-            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b1127] p-3">
-              <Mail className="text-cyan-300" size={18} />
-              {contactDeliveryConfig.email
-                ? <a href={`mailto:${contactDeliveryConfig.email}`} className="break-all hover:text-cyan-200">{contactDeliveryConfig.email}</a>
-                : <span>Direct email is not configured. You can enable it with VITE_CONTACT_EMAIL.</span>}
-            </div>
-            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b1127] p-3">
-              <MessageSquareText className="text-cyan-300" size={18} />
-              <span>{contactDeliveryConfig.endpoint ? 'Online form delivery is connected.' : contactDeliveryConfig.email ? 'Email draft delivery is available.' : 'Online form delivery is not connected yet.'}</span>
+              <SpotlightCard className="rounded-[2rem]" maxTilt={1.5}>
+                <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 md:p-8">
+                  <h3 className="text-2xl font-semibold text-white">Start a conversation</h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-300">Tell us what you are building, what you need, and how to reach you.</p>
+                  <div className="mt-8 space-y-5 text-sm text-slate-300">
+                    <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b1127] p-3 transition-colors hover:border-cyan-400/40">
+                      <Mail className="text-cyan-300" size={18} />
+                      {contactDeliveryConfig.email
+                        ? <a href={`mailto:${contactDeliveryConfig.email}`} className="break-all transition-colors hover:text-cyan-200">{contactDeliveryConfig.email}</a>
+                        : <span>Direct email is not configured. You can enable it with VITE_CONTACT_EMAIL.</span>}
+                    </div>
+                    <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b1127] p-3">
+                      <MessageSquareText className="text-cyan-300" size={18} />
+                      <span>{contactDeliveryConfig.endpoint ? 'Online form delivery is connected.' : contactDeliveryConfig.email ? 'Email draft delivery is available.' : 'Online form delivery is not connected yet.'}</span>
+                    </div>
+                  </div>
+
+                    <div className="mt-8 rounded-[1.4rem] border border-cyan-400/25 bg-cyan-400/6 p-4 text-sm leading-7 text-cyan-100 shadow-[inset_0_0_20px_rgba(69,234,244,0.06)]">
+                      <p className="font-medium">Delivery setup</p>
+                      <p className="mt-2">{contactDeliveryConfig.guidance}</p>
+                      <div className="mt-4 space-y-1">
+                        {Object.entries(contactDeliveryConfig.envKeys).map(([key, value]) => (
+                          <div key={key} className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-slate-950/30 px-3 py-2">
+                            <span className="min-w-0 break-all text-xs uppercase tracking-[0.18em] text-slate-300">{key}</span>
+                            <span className="shrink-0 text-xs text-cyan-200">{value}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+              </SpotlightCard>
+
+                  <SpotlightCard className="rounded-[2rem]" maxTilt={1.5}>
+                    <form onSubmit={handleSubmit} className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 md:p-8">
+                      <div className="grid gap-5 md:grid-cols-2">
+                        <label className="space-y-2 text-sm text-slate-200">
+                          <span>Full name *</span>
+                          <input required autoComplete="name" value={form.fullName} onChange={(e) => handleChange('fullName', e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(69,234,244,0.18)]" placeholder="Your name" />
+                        </label>
+
+                        <label className="space-y-2 text-sm text-slate-200">
+                          <span>Email *</span>
+                          <input required autoComplete="email" value={form.email} onChange={(e) => handleChange('email', e.target.value)} type="email" className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(69,234,244,0.18)]" placeholder="you@example.com" />
+                        </label>
+
+                        <label className="space-y-2 text-sm text-slate-200">
+                          <span>Company name</span>
+                          <input value={form.companyName} onChange={(e) => handleChange('companyName', e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(69,234,244,0.18)]" placeholder="Business name" />
+                        </label>
+
+                        <label className="space-y-2 text-sm text-slate-200">
+                          <span>Service *</span>
+                          <select value={form.service} onChange={(e) => handleChange('service', e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(69,234,244,0.18)]">
+                            {services.map(({ title }) => <option key={title} className="bg-[#0b1127] text-white">{title}</option>)}
+                          </select>
+                        </label>
+
+                        <label className="space-y-2 text-sm text-slate-200 md:col-span-2">
+                          <span>Project budget</span>
+                          <input value={form.budget} onChange={(e) => handleChange('budget', e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none placeholder:text-slate-500 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(69,234,244,0.18)]" placeholder="Optional budget range" />
+                        </label>
+
+                          <label className="space-y-2 text-sm text-slate-200 md:col-span-2">
+                            <span>Project description *</span>
+                            <textarea required value={form.projectDescription} onChange={(e) => handleChange('projectDescription', e.target.value)} className="min-h-[150px] w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none placeholder:text-slate-500 transition-all focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(69,234,244,0.18)]" placeholder="Tell us about your goals, timeline and what you need from the project." />
+                          </label>
+                        </div>
+
+                    {message && (
+                      <div role="status" aria-live="polite" className={`mt-5 flex items-center gap-3 rounded-xl border px-4 py-3 text-sm ${status === 'success' ? 'border-emerald-400/35 bg-emerald-400/10 text-emerald-200' : 'border-rose-400/35 bg-rose-400/10 text-rose-200'}`}>
+                        {status === 'success' ? <Check size={16} /> : <span className="text-base">!</span>}
+                        <span>{message}</span>
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-cyan-400 px-6 py-3.5 font-medium text-slate-950 shadow-[0_0_20px_rgba(69,234,244,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-cyan-300 hover:shadow-[0_0_35px_rgba(69,234,244,0.6)] disabled:cursor-not-allowed disabled:opacity-70"
+                    >
+                      {isLoading ? <><LoaderCircle className="animate-spin" size={18} /> Sending</> : <><Send size={18} /> Send inquiry</>}
+                    </button>
+                  </form>
+                </SpotlightCard>
             </div>
           </div>
-
-          <div className="mt-8 rounded-[1.4rem] border border-cyan-400/25 bg-cyan-400/6 p-4 text-sm leading-7 text-cyan-100">
-            <p className="font-medium">Delivery setup</p>
-            <p className="mt-2">{contactDeliveryConfig.guidance}</p>
-            <div className="mt-4 space-y-1">
-              {Object.entries(contactDeliveryConfig.envKeys).map(([key, value]) => (
-                <div key={key} className="flex items-center justify-between gap-4 rounded-xl border border-white/10 bg-slate-950/30 px-3 py-2">
-                  <span className="min-w-0 break-all text-xs uppercase tracking-[0.18em] text-slate-300">{key}</span>
-                  <span className="shrink-0 text-xs text-cyan-200">{value}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit} className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-8">
-          <div className="grid gap-5 md:grid-cols-2">
-            <label className="space-y-2 text-sm text-slate-200">
-              <span>Full name *</span>
-              <input required autoComplete="name" value={form.fullName} onChange={(e) => handleChange('fullName', e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500 focus:border-cyan-400" placeholder="Your name" />
-            </label>
-
-            <label className="space-y-2 text-sm text-slate-200">
-              <span>Email *</span>
-              <input required autoComplete="email" value={form.email} onChange={(e) => handleChange('email', e.target.value)} type="email" className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500 focus:border-cyan-400" placeholder="you@example.com" />
-            </label>
-
-            <label className="space-y-2 text-sm text-slate-200">
-              <span>Company name</span>
-              <input value={form.companyName} onChange={(e) => handleChange('companyName', e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none ring-0 placeholder:text-slate-500 focus:border-cyan-400" placeholder="Business name" />
-            </label>
-
-            <label className="space-y-2 text-sm text-slate-200">
-              <span>Service *</span>
-              <select value={form.service} onChange={(e) => handleChange('service', e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none focus:border-cyan-400">
-                {services.map(({ title }) => <option key={title}>{title}</option>)}
-              </select>
-            </label>
-
-            <label className="space-y-2 text-sm text-slate-200 md:col-span-2">
-              <span>Project budget</span>
-              <input value={form.budget} onChange={(e) => handleChange('budget', e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-cyan-400" placeholder="Optional budget range" />
-            </label>
-
-            <label className="space-y-2 text-sm text-slate-200 md:col-span-2">
-              <span>Project description *</span>
-              <textarea required value={form.projectDescription} onChange={(e) => handleChange('projectDescription', e.target.value)} className="min-h-[150px] w-full rounded-xl border border-white/10 bg-[#0b1127] px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-cyan-400" placeholder="Tell us about your goals, timeline and what you need from the project." />
-            </label>
-          </div>
-
-          {message && (
-            <div role="status" aria-live="polite" className={`mt-5 flex items-center gap-3 rounded-xl border px-4 py-3 text-sm ${status === 'success' ? 'border-emerald-400/35 bg-emerald-400/10 text-emerald-200' : 'border-rose-400/35 bg-rose-400/10 text-rose-200'}`}>
-              {status === 'success' ? <Check size={16} /> : <span className="text-base">!</span>}
-              <span>{message}</span>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-cyan-400 px-6 py-3 font-medium text-slate-950 transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {isLoading ? <><LoaderCircle className="animate-spin" size={18} /> Sending</> : <><Send size={18} /> Send inquiry</>}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+          );
 }

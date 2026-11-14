@@ -4,6 +4,7 @@ import MagneticLink from '../components/MagneticLink';
 import Marquee from '../components/Marquee';
 import ScrollReveal from '../components/ScrollReveal';
 import SectionTitle from '../components/SectionTitle';
+import SpotlightCard from '../components/SpotlightCard';
 import { serviceHighlights, services } from '../data/siteData';
 
 export default function ServicesPage() {
@@ -28,16 +29,16 @@ export default function ServicesPage() {
       <section className="mt-16 grid gap-0 border-y border-white/10 md:grid-cols-3">
         {serviceHighlights.map(({ title, text, icon: Icon }, index) => (
           <ScrollReveal key={title} delay={index * 0.07}>
-            <div className={`service-highlight h-full border-b border-white/10 py-6 md:border-b-0 md:px-6 md:py-8 ${index === 0 ? 'md:pl-0' : ''} ${index === serviceHighlights.length - 1 ? 'md:border-r-0 md:pr-0' : 'md:border-r'}`}>
-              <div className="flex items-start justify-between gap-5">
-                <div>
-                  <span className="text-[10px] tracking-[0.2em] text-cyan-300">0{index + 1} / PRINCIPLE</span>
-                  <h2 className="mt-4 text-xl font-medium text-white">{title}</h2>
+              <div className={`service-highlight group h-full border-b border-white/10 py-6 transition-colors duration-300 hover:bg-white/[0.015] md:border-b-0 md:px-6 md:py-8 ${index === 0 ? 'md:pl-0' : ''} ${index === serviceHighlights.length - 1 ? 'md:border-r-0 md:pr-0' : 'md:border-r'}`}>
+                <div className="flex items-start justify-between gap-5">
+                  <div>
+                    <span className="text-[10px] tracking-[0.2em] text-cyan-300 transition-colors group-hover:text-cyan-200">0{index + 1} / PRINCIPLE</span>
+                    <h2 className="mt-4 text-xl font-medium text-white transition-colors group-hover:text-cyan-100">{title}</h2>
+                  </div>
+                  <Icon size={20} className="text-cyan-200 transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <Icon size={20} className="text-cyan-200" />
+                <p className="mt-3 max-w-sm text-sm leading-7 text-slate-300">{text}</p>
               </div>
-              <p className="mt-3 max-w-sm text-sm leading-7 text-slate-300">{text}</p>
-            </div>
           </ScrollReveal>
         ))}
       </section>
@@ -52,44 +53,50 @@ export default function ServicesPage() {
           <span className="hidden pb-2 text-xs uppercase tracking-[0.24em] text-slate-500 md:block">01—06 / UMJ DIGITAL</span>
         </div>
 
-        <div className="space-y-5">
-          {services.map(({ title, summary, list, image, icon: Icon }, index) => (
-            <ScrollReveal key={title} delay={Math.min(index, 4) * 0.04}>
-            <article
-              className="service-panel grid gap-8 border border-white/10 bg-[#071126]/80 p-5 md:p-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10"
-            >
-              <div className="flex flex-col justify-center">
-                <div className="flex items-start justify-between gap-4">
-                  <span className="text-xs uppercase tracking-[0.25em] text-cyan-300">Service / 0{index + 1}</span>
-                  <Icon size={20} className="text-cyan-200" />
-                </div>
-                <h2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-[-0.04em] text-white md:text-4xl">{title}</h2>
-                <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300 md:text-base">{summary}</p>
+          <div className="space-y-6">
+            {services.map(({ title, summary, list, image, icon: Icon }, index) => (
+              <ScrollReveal key={title} delay={Math.min(index, 4) * 0.04}>
+                    <SpotlightCard className="rounded-2xl" maxTilt={2}>
+                      <article
+                        className="service-panel group grid gap-8 rounded-2xl border border-white/10 bg-[#071126]/80 p-5 transition-all duration-500 hover:border-cyan-300/35 hover:shadow-[0_20px_50px_-15px_rgba(0,0,0,0.6)] md:p-8 lg:grid-cols-[0.88fr_1.12fr] lg:gap-10"
+                      >
+                        <div className="flex flex-col justify-center">
+                          <div className="flex items-start justify-between gap-4">
+                            <span className="text-xs uppercase tracking-[0.25em] text-cyan-300">Service / 0{index + 1}</span>
+                            <Icon size={20} className="text-cyan-200 transition-transform duration-300 group-hover:rotate-6 group-hover:scale-110" />
+                          </div>
+                          <h2 className="mt-5 max-w-xl text-3xl font-semibold leading-tight tracking-[-0.04em] text-white transition-colors group-hover:text-cyan-100 md:text-4xl">{title}</h2>
+                          <p className="mt-4 max-w-xl text-sm leading-7 text-slate-300 md:text-base">{summary}</p>
 
-                <ul className="mt-7 grid gap-x-4 gap-y-2 sm:grid-cols-2">
-                  {list.map((item, itemIndex) => (
-                    <li key={item} className="service-deliverable flex items-center gap-3 border-t border-white/[0.08] py-2.5 text-xs text-slate-200 sm:text-sm">
-                      <span className="text-[9px] tracking-[0.14em] text-cyan-300">0{itemIndex + 1}</span>{item}
-                    </li>
-                  ))}
-                </ul>
+                          <ul className="mt-7 grid gap-x-4 gap-y-2 sm:grid-cols-2">
+                            {list.map((item, itemIndex) => (
+                              <li key={item} className="service-deliverable group/item flex items-center gap-3 border-t border-white/[0.08] py-2.5 text-xs text-slate-200 transition-all duration-200 hover:translate-x-1 hover:text-white sm:text-sm">
+                                <span className="text-[9px] tracking-[0.14em] text-cyan-300 transition-colors group-hover/item:text-cyan-100">0{itemIndex + 1}</span>{item}
+                              </li>
+                            ))}
+                          </ul>
 
-                <MagneticLink to="/contact" className="magnetic-link mt-7 inline-flex w-fit items-center gap-2 text-sm font-medium text-cyan-200">
-                  Plan a project <ArrowRight size={16} />
-                </MagneticLink>
-              </div>
+                        <MagneticLink
+                          to="/contact"
+                          cursorLabel="plan"
+                          className="magnetic-link mt-7 inline-flex w-fit items-center gap-2 text-sm font-medium text-cyan-200 transition hover:text-white"
+                        >
+                          Plan a project <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+                        </MagneticLink>
+                      </div>
 
-              <div className={`service-art-wrap service-art-wrap-${index + 1} relative min-h-[300px] overflow-hidden border border-white/10 bg-[#09152b] md:min-h-[420px]`}>
-                <img
-                  src={image}
-                  alt={`${title} visual`}
-                  className={`service-art-image absolute inset-0 h-full w-full ${title === 'App Development' ? 'object-contain p-5 md:p-8' : 'object-cover'}`}
-                  loading="lazy" decoding="async"
-                />
-                <div className="service-art-shade" aria-hidden="true" />
-                <div className="pointer-events-none absolute bottom-4 right-5 z-10 text-[9px] uppercase tracking-[0.24em] text-white/85">UMJ DIGITAL / 0{index + 1}</div>
-              </div>
-            </article>
+                    <div className={`service-art-wrap service-art-wrap-${index + 1} relative min-h-[300px] overflow-hidden rounded-xl border border-white/10 bg-[#09152b] transition duration-500 group-hover:border-cyan-300/30 md:min-h-[420px]`}>
+                      <img
+                        src={image}
+                        alt={`${title} visual`}
+                        className={`service-art-image absolute inset-0 h-full w-full transition duration-700 group-hover:scale-[1.04] ${title === 'App Development' ? 'object-contain p-5 md:p-8' : 'object-cover'}`}
+                        loading="lazy" decoding="async"
+                      />
+                      <div className="service-art-shade" aria-hidden="true" />
+                      <div className="pointer-events-none absolute bottom-4 right-5 z-10 text-[9px] uppercase tracking-[0.24em] text-white/85">UMJ DIGITAL / 0{index + 1}</div>
+                    </div>
+                </article>
+              </SpotlightCard>
             </ScrollReveal>
           ))}
         </div>
@@ -102,9 +109,13 @@ export default function ServicesPage() {
               <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-cyan-300">One connected studio</p>
               <h2 className="text-4xl font-semibold leading-[1.04] tracking-[-0.05em] text-white md:text-6xl"><KineticText text="Bring your next idea into focus." /></h2>
             </div>
-            <MagneticLink to="/contact" className="magnetic-link inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-white">
-              Start a conversation <MoveUpRight size={16} />
-            </MagneticLink>
+              <MagneticLink
+                to="/contact"
+                cursorLabel="chat"
+                className="magnetic-link inline-flex items-center gap-2 rounded-full bg-cyan-300 px-5 py-3 text-sm font-semibold text-slate-950 shadow-[0_0_20px_rgba(69,234,244,0.3)] transition hover:bg-white hover:shadow-[0_0_35px_rgba(69,234,244,0.5)]"
+              >
+                Start a conversation <MoveUpRight size={16} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </MagneticLink>
           </div>
         </ScrollReveal>
       </section>

@@ -5,6 +5,7 @@ import { Link, Route, Routes, useLocation } from 'react-router-dom';
 import AmbientCursor from './components/AmbientCursor';
 import Footer from './components/Footer';
 import Header from './components/Header';
+import SmoothScroll from './components/SmoothScroll';
 import { assets } from './config/assets';
 import HomePage from './pages/Home';
 
@@ -19,9 +20,9 @@ function NotFoundPage() {
       <p className="mb-4 text-xs font-semibold uppercase tracking-[0.34em] text-cyan-300">404</p>
       <h1 className="text-4xl font-semibold tracking-[-0.05em] text-white md:text-6xl">This page is not on the map.</h1>
       <p className="mt-5 max-w-md text-base leading-8 text-slate-300">The link may be out of date. Head back to the studio homepage.</p>
-      <Link to="/" className="mt-8 inline-flex items-center justify-center rounded-full bg-cyan-300 px-6 py-3 text-sm font-semibold text-[#071025] transition hover:bg-white">
-        Back home
-      </Link>
+        <Link to="/" className="mt-8 inline-flex items-center justify-center rounded-full bg-cyan-300 px-6 py-3 text-sm font-semibold text-[#071025] transition hover:bg-white shadow-[0_0_20px_rgba(69,234,244,0.3)] hover:shadow-[0_0_30px_rgba(69,234,244,0.5)]">
+          Back home
+        </Link>
     </div>
   );
 }
@@ -35,10 +36,10 @@ function PageMotion({ children }: { children: ReactNode }) {
 
   return (
     <motion.div
-      initial={reduceMotion ? false : { opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={reduceMotion ? undefined : { opacity: 0 }}
-      transition={{ duration: reduceMotion ? 0 : 0.24, ease: [0.22, 1, 0.36, 1] }}
+      initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={reduceMotion ? undefined : { opacity: 0, y: -6 }}
+      transition={{ duration: reduceMotion ? 0 : 0.3, ease: [0.22, 1, 0.36, 1] }}
     >
       <Suspense fallback={<div className="min-h-[50vh]" />}>{children}</Suspense>
     </motion.div>
@@ -66,10 +67,12 @@ export default function App() {
 
   return (
     <div className="site-content min-h-screen text-white">
+      <SmoothScroll />
       <div
         className="site-backdrop"
         style={{ '--site-bg': `url("${assets.backgrounds.site}")` } as CSSProperties}
       />
+      <div className="site-grid-texture" aria-hidden="true" />
       <AmbientCursor />
       <Header />
       <main>
