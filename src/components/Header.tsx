@@ -37,7 +37,24 @@ export default function Header() {
 
   useEffect(() => {
     document.body.classList.toggle('nav-open', mobileOpen);
-    return () => document.body.classList.remove('nav-open');
+    const lenis = (window as unknown as { __lenis?: { stop: () => void; start: () => void } }).__lenis;
+
+    if (mobileOpen) {
+      lenis?.stop();
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      lenis?.start();
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+
+    return () => {
+      document.body.classList.remove('nav-open');
+      lenis?.start();
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
   }, [mobileOpen]);
 
   useEffect(() => {
@@ -66,12 +83,12 @@ export default function Header() {
           : 'border-white/10 bg-[#05082F]/80 backdrop-blur-xl'
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3.5 sm:py-4 sm:px-6 lg:px-8">
         <Link to="/" className="group flex shrink-0 items-center gap-3" aria-label="UMJ Digital home">
           <img
             src={assets.branding.logoPrimarySvg}
             alt=""
-            className="h-10 w-auto transition-transform duration-300 group-hover:scale-105"
+            className="h-9 w-auto transition-transform duration-300 group-hover:scale-105 sm:h-10"
             width="707"
             height="357"
           />
@@ -121,10 +138,10 @@ export default function Header() {
           aria-label="Toggle navigation"
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition hover:bg-white/10 md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white transition active:scale-95 hover:bg-white/10 md:hidden"
           onClick={() => setMobileOpen((value) => !value)}
         >
-          {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+          {mobileOpen ? <X size={20} className="transition-transform duration-200" /> : <Menu size={20} />}
         </button>
       </div>
 
@@ -136,7 +153,7 @@ export default function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 top-[73px] bg-black/60 backdrop-blur-xs md:hidden"
+              className="fixed inset-0 top-[65px] bg-black/70 backdrop-blur-md md:hidden"
               aria-hidden="true"
               onClick={() => setMobileOpen(false)}
             />
@@ -144,17 +161,17 @@ export default function Header() {
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
               id="mobile-nav"
-              className="relative z-10 max-h-[calc(100dvh-4.5rem)] overscroll-contain overflow-x-hidden overflow-y-auto border-t border-white/10 bg-[#05082F] md:hidden"
+              className="relative z-10 max-h-[calc(100dvh-4.5rem)] overscroll-contain overflow-x-hidden overflow-y-auto border-t border-cyan-400/20 bg-[#05082F]/98 backdrop-blur-2xl shadow-[0_24px_50px_rgba(0,0,0,0.85)] md:hidden"
             >
-              <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4">
+              <div className="mx-auto flex max-w-7xl flex-col gap-2.5 px-4 py-5">
                 {navItems.map((item, index) => (
                   <motion.div
                     key={item.to}
-                    initial={{ opacity: 0, x: -12 }}
+                    initial={{ opacity: 0, x: -14 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.035 }}
+                    transition={{ delay: index * 0.04, duration: 0.25 }}
                   >
                     <NavLink
                       to={item.to}
@@ -163,22 +180,37 @@ export default function Header() {
                       onFocus={() => prefetchPage(item.to)}
                       onClick={() => setMobileOpen(false)}
                       className={({ isActive }) =>
-                        `block rounded-xl px-4 py-3 text-sm font-medium transition ${
-                          isActive ? 'bg-cyan-300 text-slate-950 font-semibold' : 'text-slate-200 hover:bg-white/5'
+                        `flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-medium transition active:scale-[0.99] ${
+                          isActive
+                            ? 'border border-cyan-300/40 bg-cyan-300/15 font-semibold text-cyan-200 shadow-[0_0_20px_rgba(69,234,244,0.15)]'
+                            : 'text-slate-200 hover:bg-white/5 hover:text-white'
                         }`
                       }
                     >
-                      {item.label}
+                      {({ isActive }) => (
+                        <>
+                          <span>{item.label}</span>
+                          {isActive && (
+                            <span className="h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(69,234,244,0.8)]" />
+                          )}
+                        </>
+                      )}
                     </NavLink>
                   </motion.div>
                 ))}
-                <Link
-                  to="/contact"
-                  onClick={() => setMobileOpen(false)}
-                  className="mt-1 inline-flex items-center justify-center rounded-full border border-cyan-400/70 bg-cyan-400/10 px-5 py-3 text-sm font-medium text-cyan-200"
-                >
-                  Book a Call
-                </Link>
+
+                <div className="mt-2 pt-2 border-t border-white/10 flex flex-col gap-3">
+                  <Link
+                    to="/contact"
+                    onClick={() => setMobileOpen(false)}
+                    className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-cyan-300 px-6 py-3.5 text-sm font-semibold text-[#071025] shadow-[0_0_20px_rgba(69,234,244,0.35)] transition active:scale-[0.98] hover:bg-white"
+                  >
+                    Book a Call
+                  </Link>
+                  <div className="flex items-center justify-center gap-2 py-1 text-[10px] uppercase tracking-[0.24em] text-slate-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" /> Available for new projects
+                  </div>
+                </div>
               </div>
             </motion.div>
           </>
