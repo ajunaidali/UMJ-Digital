@@ -6,6 +6,7 @@ import AmbientCursor from './components/AmbientCursor';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import SmoothScroll from './components/SmoothScroll';
+import WhatsAppButton from './components/WhatsAppButton';
 import { assets } from './config/assets';
 import HomePage from './pages/Home';
 
@@ -88,6 +89,7 @@ export default function App() {
         </AnimatePresence>
       </main>
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }

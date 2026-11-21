@@ -39,7 +39,6 @@ html.lenis body {
 body.nav-open {
   overflow: hidden !important;
   overscroll-behavior: none;
-  touch-action: none;
 }
 
 .site-header {

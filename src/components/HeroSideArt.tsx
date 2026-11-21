@@ -29,7 +29,8 @@ export default function HeroSideArt() {
   const [armLottie, setArmLottie] = useState(false);
   const [lottieFailed, setLottieFailed] = useState(false);
   const blocked = connectionBlocked();
-  const playLottie = !reduceMotion && !blocked && !lottieFailed;
+  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+  const playLottie = !isMobile && !reduceMotion && !blocked && !lottieFailed;
 
   useEffect(() => {
     if (!playLottie) return;

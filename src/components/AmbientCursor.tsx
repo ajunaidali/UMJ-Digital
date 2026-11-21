@@ -13,12 +13,15 @@ export default function AmbientCursor() {
   const [cursorLabel, setCursorLabel] = useState<string>('');
   const [isInteractive, setIsInteractive] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
     // Only fine-pointer desktop with motion allowed
     const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (!isFinePointer || prefersReduced) return;
+
+    setEnabled(true);
 
     let targetX = -100;
     let targetY = -100;
@@ -98,6 +101,8 @@ export default function AmbientCursor() {
       document.documentElement.removeEventListener('pointerleave', handlePointerLeave);
     };
   }, [isVisible]);
+
+  if (!enabled) return null;
 
   return (
     <div
