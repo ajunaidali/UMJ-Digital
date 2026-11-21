@@ -8,7 +8,7 @@ const envEmail = import.meta.env.VITE_CONTACT_EMAIL?.trim() ?? '';
  * Replace this placeholder with your WhatsApp phone number in international
  * format without '+' or dashes (e.g. '923001234567').
  */
-export const WHATSAPP_NUMBER = '92XXXXXXXXXX';
+export const WHATSAPP_NUMBER = '923101160312';
 export const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
 
 /**

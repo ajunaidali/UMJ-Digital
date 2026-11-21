@@ -77,8 +77,8 @@ export default function HomePage() {
         <div className="hero-ambient hero-ambient-one" aria-hidden="true" />
         <div className="hero-ambient hero-ambient-two" aria-hidden="true" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid items-center lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-12 xl:gap-x-16">
-            <div className="relative z-10 min-w-0 pb-4 sm:pb-8 lg:max-w-3xl">
+          <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-14">
+            <div className="relative z-10 min-w-0 pb-4 sm:pb-8">
               <ScrollReveal direction="left">
                 <div className="mb-4 sm:mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-300/25 bg-cyan-300/[0.06] px-3.5 py-1.5 sm:px-4 sm:py-2 text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.22em] sm:tracking-[0.3em] text-cyan-100 shadow-[0_0_15px_rgba(69,234,244,0.12)]">
                   <Sparkles size={13} className="text-cyan-300 animate-pulse shrink-0" /> Independent digital studio
@@ -118,7 +118,9 @@ export default function HomePage() {
                 </div>
               </ScrollReveal>
             </div>
-            <HeroSideArt />
+            <div className="relative flex w-full items-center justify-center">
+              <HeroSideArt />
+            </div>
           </div>
           <div className="mt-6 sm:mt-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/10 py-3.5 sm:py-5 text-[10px] uppercase tracking-[0.14em] text-slate-400 sm:tracking-[0.3em]">
             <span>Strategy / Design / Development</span>

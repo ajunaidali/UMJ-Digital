@@ -76,7 +76,11 @@ h3,
   box-sizing: border-box;
 }
 
-button, a, input, textarea, select {
+button,
+a,
+input,
+textarea,
+select {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -201,11 +205,23 @@ select {
 
 .hero-side {
   position: relative;
-  width: min(520px, 38vw);
-  max-width: 100%;
-  margin-inline-start: auto;
+  width: 100%;
+  max-width: 620px;
+  margin-inline: auto;
   pointer-events: auto;
   animation: hero-side-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (min-width: 1280px) {
+  .hero-side {
+    max-width: 680px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .hero-side {
+    max-width: 720px;
+  }
 }
 
 .hero-side-aura {
@@ -235,9 +251,9 @@ select {
   border-radius: 1.35rem;
   background: #071022;
   box-shadow:
-  inset 0 0 0 1px rgba(255, 255, 255, 0.06),
-  0 28px 70px rgba(2, 6, 23, 0.45),
-  0 0 35px rgba(69, 234, 244, 0.15);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 28px 70px rgba(2, 6, 23, 0.45),
+    0 0 35px rgba(69, 234, 244, 0.15);
   transform-style: preserve-3d;
 }
 
@@ -1302,7 +1318,8 @@ select {
   will-change: transform;
 }
 
-@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+@media (prefers-reduced-motion: reduce),
+(pointer: coarse) {
   .fluid-char-inner {
     transform: none !important;
     text-shadow: none !important;
@@ -1313,14 +1330,16 @@ select {
 
 @media (max-width: 1023px) {
   .hero-side {
-    width: min(100%, 380px);
+    width: 100%;
+    max-width: 560px;
     margin: 2rem auto 0;
   }
 }
 
 @media (max-width: 767px) {
   .hero-side {
-    width: min(calc(100% - 28px), 310px);
+    width: 100%;
+    max-width: 480px;
     margin: 1.5rem auto 0;
   }
 

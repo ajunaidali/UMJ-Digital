@@ -29,8 +29,7 @@ export default function HeroSideArt() {
   const [armLottie, setArmLottie] = useState(false);
   const [lottieFailed, setLottieFailed] = useState(false);
   const blocked = connectionBlocked();
-  const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
-  const playLottie = !isMobile && !reduceMotion && !blocked && !lottieFailed;
+  const playLottie = !reduceMotion && !blocked && !lottieFailed;
 
   useEffect(() => {
     if (!playLottie) return;
@@ -130,14 +129,14 @@ export default function HeroSideArt() {
     <div ref={containerRef} className="hero-side" aria-hidden="true">
       {/* Ambient soft glow aura behind the stage */}
       <div className="hero-side-aura" />
-      
+
       <div ref={frameRef} className="hero-side-frame">
         <span className="hero-side-orbit" />
         <span className="hero-side-orbit hero-side-orbit-inner" />
         <div className="hero-side-stage">
           {/* Subtle physical glass sheen sweep */}
           <div className="hero-side-glass-sheen" />
-          
+
           {playLottie && armLottie ? (
             <Suspense fallback={null}>
               <HeroAnimation
