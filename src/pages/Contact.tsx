@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { Check, LoaderCircle, Mail, MessageSquareText, Send } from 'lucide-react';
+import { Check, LoaderCircle, Mail, MessageSquareText, Phone, Send } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import SpotlightCard from '../components/SpotlightCard';
-import { contactDeliveryConfig, SOCIAL_LINKS } from '../config/contact';
+import { contactDeliveryConfig, SOCIAL_LINKS, WHATSAPP_DISPLAY, WHATSAPP_INTL } from '../config/contact';
 import { services } from '../data/siteData';
 
 type FormState = {
@@ -103,15 +103,21 @@ export default function ContactPage() {
                 <div className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 transition-all duration-300 md:p-8">
                   <h3 className="text-2xl font-semibold text-white">Start a conversation</h3>
                   <p className="mt-3 text-sm leading-7 text-slate-300">Tell us what you are building, what you need, and how to reach you.</p>
-                  <div className="mt-8 space-y-5 text-sm text-slate-300">
+                  <div className="mt-8 space-y-4 text-sm text-slate-300">
                     <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b1127] p-3 transition-colors hover:border-cyan-400/40">
-                      <Mail className="text-cyan-300" size={18} />
+                      <Mail className="text-cyan-300 shrink-0" size={18} />
                       {contactDeliveryConfig.email
                         ? <a href={`mailto:${contactDeliveryConfig.email}`} className="break-all transition-colors hover:text-cyan-200">{contactDeliveryConfig.email}</a>
                         : <span>Direct email is not configured. You can enable it with VITE_CONTACT_EMAIL.</span>}
                     </div>
+                    <div className="flex items-center gap-3 rounded-2xl border border-emerald-400/25 bg-[#0b1127] p-3 transition-colors hover:border-emerald-400/50">
+                      <Phone className="text-emerald-400 shrink-0" size={18} />
+                      <a href={SOCIAL_LINKS.whatsapp} target="_blank" rel="noopener noreferrer" className="break-all transition-colors hover:text-emerald-200">
+                        WhatsApp: {WHATSAPP_INTL} ({WHATSAPP_DISPLAY})
+                      </a>
+                    </div>
                     <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-[#0b1127] p-3">
-                      <MessageSquareText className="text-cyan-300" size={18} />
+                      <MessageSquareText className="text-cyan-300 shrink-0" size={18} />
                       <span>{contactDeliveryConfig.endpoint ? 'Online form delivery is connected.' : contactDeliveryConfig.email ? 'Email draft delivery is available.' : 'Online form delivery is not connected yet.'}</span>
                     </div>
                   </div>

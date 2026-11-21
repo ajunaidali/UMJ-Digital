@@ -1,6 +1,6 @@
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { ArrowDownRight, ArrowRight, BadgeCheck, ChevronRight, MoveUpRight, Sparkles } from 'lucide-react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import FluidHeroHeading from '../components/FluidHeroHeading';
 import HeroSideArt from '../components/HeroSideArt';
@@ -71,6 +71,16 @@ function StorySection() {
 }
 
 export default function HomePage() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 1024px)');
+    setIsDesktop(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, []);
+
   return (
     <div className="home-page pb-16 sm:pb-20">
       <section className="hero-section relative overflow-hidden pt-5 sm:pt-12 md:pt-16">
@@ -88,8 +98,15 @@ export default function HomePage() {
                 text="We Create Digital Experiences That Move Businesses Forward."
                 className="max-w-3xl text-[clamp(1.85rem,7.2vw,5.25rem)] font-semibold leading-[1.09] tracking-[-0.035em] text-white sm:leading-[1.04] sm:tracking-[-0.04em]"
               />
+
+              {/* Mobile Hero Animation - Displayed on mobile screens in place of the paragraph text as requested */}
+              <div className="my-5 w-full max-w-[500px] mx-auto lg:hidden">
+                {!isDesktop && <HeroSideArt />}
+              </div>
+
               <ScrollReveal delay={0.28} direction="left">
-                <p className="mt-4 sm:mt-6 max-w-xl text-sm sm:text-base leading-relaxed sm:leading-8 text-slate-300 md:text-lg">
+                {/* Desktop paragraph text - Shown on desktop (>=1024px), replaced by animation on mobile */}
+                <p className="hidden lg:block mt-4 sm:mt-6 max-w-xl text-sm sm:text-base leading-relaxed sm:leading-8 text-slate-300 md:text-lg">
                   From powerful websites and mobile applications to creative branding and digital marketing, we help businesses transform ideas into meaningful digital experiences.
                 </p>
                 <div className="mt-6 sm:mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -118,8 +135,9 @@ export default function HomePage() {
                 </div>
               </ScrollReveal>
             </div>
-            <div className="relative flex w-full items-center justify-center">
-              <HeroSideArt />
+            {/* Desktop Hero Side Animation */}
+            <div className="relative hidden w-full items-center justify-center lg:flex">
+              {isDesktop && <HeroSideArt />}
             </div>
           </div>
           <div className="mt-6 sm:mt-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-white/10 py-3.5 sm:py-5 text-[10px] uppercase tracking-[0.14em] text-slate-400 sm:tracking-[0.3em]">

@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * AmbientCursor inspired by Arktech Studios:
- * - Fluid lerped physics for zero-lag, silky-smooth tracking
- * - Soft cyan glowing ring with an elegant precision core
- * - Dynamic expansion & badge label over interactive cards/links (data-cursor="...")
- * - Completely inactive & zero-overhead on touch screens and prefers-reduced-motion
+ * AmbientCursor:
+ * - Single unified sleek cursor pointer (no dual/split pointers)
+ * - Buttery-smooth lerped physics with dampening for silky-smooth tracking
+ * - Smooth expansion and badge label over interactive cards/links (data-cursor="...")
+ * - Tactile press scaling on click
+ * - Completely inactive on touch screens and prefers-reduced-motion
  */
 export default function AmbientCursor() {
-  const coreRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
   const [cursorLabel, setCursorLabel] = useState<string>('');
   const [isInteractive, setIsInteractive] = useState<boolean>(false);
+  const [isDown, setIsDown] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [enabled, setEnabled] = useState(false);
 
@@ -36,7 +37,6 @@ export default function AmbientCursor() {
 
       if (!isVisible) setIsVisible(true);
 
-      // Check for custom cursor attributes or interactive targets
       const target = e.target as HTMLElement | null;
       if (target) {
         const cursorEl = target.closest('[data-cursor]') as HTMLElement | null;
@@ -63,24 +63,16 @@ export default function AmbientCursor() {
       setCursorLabel('');
     };
 
-    const handlePointerDown = () => {
-      if (ringRef.current) ringRef.current.style.transform += ' scale(0.85)';
-    };
-
-    const handlePointerUp = () => {
-      if (ringRef.current) ringRef.current.style.transform = ringRef.current.style.transform.replace(' scale(0.85)', '');
-    };
+    const handlePointerDown = () => setIsDown(true);
+    const handlePointerUp = () => setIsDown(false);
 
     const animate = () => {
-      // Smooth lerp (0.22 for ring, direct/near-instant for precision core)
-      currentX += (targetX - currentX) * 0.22;
-      currentY += (targetY - currentY) * 0.22;
+      // Single smooth lerp (0.18) for ultra-fluid, zero-jitter cursor tracking
+      currentX += (targetX - currentX) * 0.18;
+      currentY += (targetY - currentY) * 0.18;
 
-      if (coreRef.current) {
-        coreRef.current.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
-      }
-      if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
       }
 
       frameId = requestAnimationFrame(animate);
@@ -111,25 +103,30 @@ export default function AmbientCursor() {
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      {/* Precision Core Dot */}
+      {/* 1 Single Unified Smooth Custom Cursor Pointer */}
       <div
-        ref={coreRef}
-        className="ambient-cursor-dot fixed top-0 left-0 -ml-1 -mt-1 h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(69,234,244,0.9)] transition-transform duration-75"
-        style={{ willChange: 'transform' }}
-      />
-
-      {/* Ambient Responsive Halo Ring */}
-      <div
-        ref={ringRef}
-        className={`ambient-cursor-ring fixed top-0 left-0 flex items-center justify-center rounded-full border transition-[width,height,background-color,border-color,margin] duration-300 ease-out ${
+        ref={cursorRef}
+        className={`ambient-cursor-single fixed top-0 left-0 flex items-center justify-center rounded-full transition-[width,height,background-color,border-color,margin,transform] duration-200 ease-out ${
+          isDown ? 'scale-90' : 'scale-100'
+        } ${
           isInteractive
             ? cursorLabel
-              ? '-ml-8 -mt-8 h-16 w-16 border-cyan-300/80 bg-cyan-400/20 backdrop-blur-[2px] shadow-[0_0_24px_rgba(69,234,244,0.35)]'
-              : '-ml-6 -mt-6 h-12 w-12 border-cyan-300/60 bg-cyan-400/15 shadow-[0_0_18px_rgba(69,234,244,0.25)]'
-            : '-ml-3.5 -mt-3.5 h-7 w-7 border-cyan-400/35 bg-cyan-400/5 shadow-[0_0_12px_rgba(69,234,244,0.12)]'
+              ? '-ml-8 -mt-8 h-16 w-16 border border-cyan-300/90 bg-cyan-400/25 backdrop-blur-[2px] shadow-[0_0_24px_rgba(69,234,244,0.4)]'
+              : '-ml-5 -mt-5 h-10 w-10 border border-cyan-300/70 bg-cyan-400/20 shadow-[0_0_18px_rgba(69,234,244,0.3)]'
+            : '-ml-2.5 -mt-2.5 h-5 w-5 border border-cyan-300/80 bg-cyan-400/25 shadow-[0_0_14px_rgba(69,234,244,0.5)]'
         }`}
         style={{ willChange: 'transform' }}
       >
+        {/* Luminous core that moves strictly as part of the single pointer */}
+        <span
+          className={`rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(69,234,244,0.9)] transition-all duration-150 ${
+            cursorLabel
+              ? 'hidden'
+              : isInteractive
+              ? 'h-1.5 w-1.5 opacity-90'
+              : 'h-1.5 w-1.5 opacity-100'
+          }`}
+        />
         {cursorLabel && (
           <span className="text-[9px] font-semibold uppercase tracking-[0.16em] text-cyan-100 select-none">
             {cursorLabel}

@@ -10,6 +10,8 @@ const envEmail = import.meta.env.VITE_CONTACT_EMAIL?.trim() ?? '';
  */
 export const WHATSAPP_NUMBER = '923101160312';
 export const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
+export const WHATSAPP_DISPLAY = '0310 1160312';
+export const WHATSAPP_INTL = '+92 310 1160312';
 
 /**
  * =========================================================================
